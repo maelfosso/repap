@@ -1,10 +1,45 @@
 import React from 'react';
-import logo from '../logo.svg';
-import '../App.css';
+import { enquireScreen } from 'enquire-js';
+import Header from './Header';
+import '../App.scss';
+import 'antd/dist/antd.css';
 
-function App() {
-  return (
-    <div className="App">
+
+let isMobile = false;
+enquireScreen((b) => {
+  isMobile = b;
+});
+
+
+
+class App extends React.Component {
+  state = {
+    isMobile,
+    showShadow: false,
+  };
+
+  componentDidMount() {
+    enquireScreen((b) => {
+      this.setState({
+        isMobile: !!b,
+      });
+    });
+  }
+  navToShadow = (e) => {
+    this.setState({ showShadow: e.mode === 'leave' });
+  }
+
+  render() {
+    return (
+      <Header key="header" className={this.state.showShadow ? 'show-shadow' : ''} />
+    );
+  }
+
+}
+
+export default App;
+
+{/* <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -19,8 +54,4 @@ function App() {
           Learn React
         </a>
       </header>
-    </div>
-  );
-}
-
-export default App;
+    </div> */}
