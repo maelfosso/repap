@@ -1,5 +1,9 @@
 import React from 'react';
-import { Button, Modal } from 'antd';
+import { Row, Col, Typography, Button, Modal } from 'antd';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+
+const { Title } = Typography;
 
 export default class Header extends React.Component {
 
@@ -13,26 +17,47 @@ export default class Header extends React.Component {
     });
   }
 
+  responseFacebook = (response) => {
+    console.log(response);
+  }
+
   render() {
     return (
       <header {...this.props}>
-        <a className="logo-wrapper" href="https://antv.alipay.com/zh-cn/index.html" target="_blank">
+        <span className="logo-wrapper">
           <i className="logo" />
           <span>Repap</span>
-        </a>
+        </span>
         <div className="button">
           <Button onClick={this.openSignInModal}>Sign in</Button>
         </div>
         <Modal
-          title="Sign In"
+          title={null}
           centered
           visible={this.state.signInModalVisible}
           footer={null}
           onCancel={this.openSignInModal}
         >
-          <p>some contents...</p>
-          <p>some contents...</p>
-          <p>some contents...</p>
+          <Row justify="center">
+            <Title>Sign In With</Title>
+          </Row>
+          <Row>
+            <Col>
+              <FacebookLogin
+                appId="1088597931155576"
+                autoLoad={false}
+                fields="name,email,picture"
+                scope="public_profile,user_friends"
+                callback={this.responseFacebook}
+                render={renderProps => (
+                  <FacebookLoginButton onClick={renderProps.onClick} />
+                )}
+              />
+            </Col>
+            <Col>
+              <GoogleLoginButton onClick={() => alert("Not yet implemented")} />
+            </Col>
+          </Row>
         </Modal>
       </header>
     );

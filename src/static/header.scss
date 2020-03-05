@@ -6,6 +6,7 @@ header {
   width: 100%;
   background: #F8FAFE;
   transition: box-shadow .3s ease-out, background .3s ease-out;
+  
   &.show-shadow{
     background: #FDFDFD;
     box-shadow: 0 2px 8px rgba(229, 229, 229, 0.5);
@@ -41,4 +42,15 @@ header {
       height: 32px;
     }
   }
+}
+
+.sign-in-title {
+  width: 100%;
+  display: block;
+  // font-family: Montserrat-Medium;
+  font-size: 39px;
+  color: #555;
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 1em;
 }
