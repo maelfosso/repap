@@ -1,5 +1,7 @@
 import React from 'react';
-import { Row, Col, Typography, Button, Modal } from 'antd';
+import { Row, Col, Typography, Button, Modal, Form, Input, Checkbox } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 
@@ -8,17 +10,23 @@ const { Title } = Typography;
 export default class Header extends React.Component {
 
   state = {
-    signInModalVisible: false
+    signInModalVisible: false,
+    signUpModalVisible: false
   };
 
   openSignInModal = (e) => {
     this.setState({
-      signInModalVisible: !this.state.signInModalVisible
+      signInModalVisible: !this.state.signInModalVisible,
+      signUpModalVisible: false
     });
   }
 
   responseFacebook = (response) => {
     console.log(response);
+  }
+
+  onSignInFinish = values => {
+    console.log('Received values of form: ', values);
   }
 
   render() {
@@ -32,32 +40,51 @@ export default class Header extends React.Component {
           <Button onClick={this.openSignInModal}>Sign in</Button>
         </div>
         <Modal
-          title={null}
+          title="Sign In"
           centered
           visible={this.state.signInModalVisible}
           footer={null}
           onCancel={this.openSignInModal}
-        >
-          <Row justify="center">
-            <Title>Sign In With</Title>
-          </Row>
-          <Row>
-            <Col>
-              <FacebookLogin
-                appId="1088597931155576"
-                autoLoad={false}
-                fields="name,email,picture"
-                scope="public_profile,user_friends"
-                callback={this.responseFacebook}
-                render={renderProps => (
-                  <FacebookLoginButton onClick={renderProps.onClick} />
-                )}
+        >          
+          <Form
+            name="sign_in"
+            className="sign-in-form"
+            initialValues={{ remember: true }}
+            onFinish={this.onSignInFinish}
+          >
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: 'Please input your Email!' }]}
+            >
+              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input your Password!' }]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
               />
-            </Col>
-            <Col>
-              <GoogleLoginButton onClick={() => alert("Not yet implemented")} />
-            </Col>
-          </Row>
+            </Form.Item>
+            <Form.Item>
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+
+              <a className="forgot" href="">
+                Forgot password
+              </a>
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="button">
+                Log in
+              </Button>
+              Or <a href="">register now!</a>
+            </Form.Item>
+          </Form>
         </Modal>
       </header>
     );
