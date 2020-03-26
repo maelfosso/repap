@@ -153,12 +153,12 @@ class Header extends React.Component {
               <Button type="primary" htmlType="submit" className="button">
                 Log in
               </Button>
-              Or <a href="">sign up now!</a>
+              Or <a onClick={() => {this.openSignInModal(); this.openSignUpModal();}}>Register now!</a>
             </Form.Item>
           </Form>
         </Modal>
         <Modal
-          title="Sign Up"
+          title="Registration"
           centered
           visible={this.state.signUpModalVisible}
           footer={null}
@@ -275,9 +275,9 @@ class Header extends React.Component {
             
             <Form.Item>
               <Button type="primary" htmlType="submit" className="button">
-                Sign up
+                Register
               </Button>
-              Or <a href="">sign in now!</a>
+              Or <a onClick={() => {this.openSignUpModal(); this.openSignInModal();}}>Login now!</a>
             </Form.Item>
           </Form>
         </Modal>
