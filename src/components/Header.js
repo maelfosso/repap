@@ -1,9 +1,7 @@
 import React from 'react';
 import { Row, Col, Tooltip, Typography, Button, Modal, Form, Input, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+import { signIn } from '../api/auth.api';
 
 const { Title } = Typography;
 
@@ -66,6 +64,19 @@ export default class Header extends React.Component {
 
   onSignInFinish = values => {
     console.log('Received values of form: ', values);
+    const { username, password } = values;
+
+    signIn(username, password).then(response => {
+      console.log(response);
+      if (response.failure) {
+        
+      } else {
+        const { jwt, user } = response;
+
+        localStorage.setItem("token", jwt);
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+    });
   }
 
   onSignUpFinish = values => {
@@ -80,11 +91,11 @@ export default class Header extends React.Component {
           <span>Repap</span>
         </span>
         <div className="button">
-          <Button onClick={this.openSignInModal}>Sign in</Button>
-          <Button onClick={this.openSignUpModal}>Sign up</Button>
+          <Button onClick={this.openSignInModal}>Login</Button>
+          <Button onClick={this.openSignUpModal}>Registration</Button>
         </div>
         <Modal
-          title="Sign In"
+          title="Login"
           centered
           visible={this.state.signInModalVisible}
           footer={null}
@@ -97,10 +108,10 @@ export default class Header extends React.Component {
             onFinish={this.onSignInFinish}
           >
             <Form.Item
-              name="email"
-              rules={[{ required: true, message: 'Please input your Email!' }]}
+              name="username"
+              rules={[{ required: true, message: 'Please input your Email or Phone number!' }]}
             >
-              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email or Phone number'" />
             </Form.Item>
             <Form.Item
               name="password"
