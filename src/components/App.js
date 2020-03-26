@@ -1,26 +1,74 @@
 import React from 'react';
-import logo from '../logo.svg';
-import '../App.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { enquireScreen } from 'enquire-js';
+import { Spin } from 'antd';
+import Header from './Header';
+import { checkToken } from '../actions/auth';
+import '../App.scss';
+import 'antd/dist/antd.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+let isMobile = false;
+enquireScreen((b) => {
+  isMobile = b;
+});
+
+
+class App extends React.Component {
+  state = {
+    isMobile,
+    showShadow: false,
+    loading: false
+  };
+
+  componentDidMount() {
+    enquireScreen((b) => {
+      this.setState({
+        isMobile: !!b,
+      });
+    });
+
+    const { checkToken } = this.props;
+    const jwtToken = localStorage.getItem('token');
+    checkToken(jwtToken);
+  }
+
+  componentDidUpdate = (prevState, prevProps) => {
+    const { isAuthenticated } = this.props;
+    
+  }
+
+  navToShadow = (e) => {
+    this.setState({ showShadow: e.mode === 'leave' });
+  }
+
+  render() {
+    const { isChecking } = this.props;
+
+    if (isChecking) {
+      console.log("is checking..");
+      return (
+        <div>
+          <Spin size="large" />
+        </div>
+      )
+    }
+
+    return (
+      <Header key="header" className={this.state.showShadow ? 'show-shadow' : ''} />
+    );
+  }
+
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  checkToken: (token) => dispatch(checkToken(token))
+});
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.authReducer.isAuthenticated,
+  isChecking: state.authReducer.isChecking
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
