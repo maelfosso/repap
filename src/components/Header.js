@@ -1,11 +1,15 @@
-import React from 'react';
-import { Row, Col, Tooltip, Typography, Button, Modal, Form, Input, Checkbox } from 'antd';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import { message, Tooltip, Typography, Button, Modal, Form, Input, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { signIn } from '../api/auth.api';
 
-const { Title } = Typography;
+import { login } from '../actions/auth';
 
-export default class Header extends React.Component {
+const key = 'auth';
+
+class Header extends React.Component {
 
   state = {
     signInModalVisible: false,
@@ -58,34 +62,46 @@ export default class Header extends React.Component {
     });
   }
 
-  responseFacebook = (response) => {
-    console.log(response);
-  }
-
   onSignInFinish = values => {
-    console.log('Received values of form: ', values);
+    const { login } = this.props;
     const { username, password } = values;
-
-    signIn(username, password).then(response => {
-      console.log(response);
-      if (response.failure) {
-        
-      } else {
-        const { jwt, user } = response;
-
-        localStorage.setItem("token", jwt);
-        localStorage.setItem("user", JSON.stringify(user));
-      }
-    });
+    
+    login(username, password);
   }
 
   onSignUpFinish = values => {
     console.log('Received values of form: ', values);
   }
+  
+  onLoginPending = () => {
+    message.loading({ content: 'Login in progress', key});
+  }
+
+  onLoginSuccess = () => {
+    message.success({ content: 'Login successful!', key });
+  }
+
+  onLoginFailed = () => {
+    message.error({ content: 'Sorry login failed!', key });
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { isLoginPending, isLoginFailed, isLoginSuccess } = this.props;
+
+    if (isLoginPending) {
+      this.onLoginPending();
+    }
+    if (isLoginSuccess) {
+      this.onLoginSuccess();
+    }
+    if (isLoginFailed) {
+      this.onLoginFailed();
+    }
+  }
 
   render() {
     return (
-      <header {...this.props}>
+      <header>
         <span className="logo-wrapper">
           <i className="logo" />
           <span>Repap</span>
@@ -265,8 +281,20 @@ export default class Header extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
+        
       </header>
     );
   }
 
 }
+
+const mapDispatchToProps = dispatch => ({
+  login: (username, password) => dispatch(login(username, password))  
+});
+const mapStateToProps = state => ({
+  isLoginFailed: state.authReducer.isLoginFailed,
+  isLoginSuccess: state.authReducer.isLoginSuccess,
+  isLoginPending: state.authReducer.isLoginPending
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
