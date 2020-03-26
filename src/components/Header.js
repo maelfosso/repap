@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { message, Tooltip, Alert, Button, Modal, Form, Input, Checkbox } from 'antd';
+import { message, Tooltip, Alert, Button, Modal, Form, Input, Checkbox, Menu, Dropdown } from 'antd';
 import { UserOutlined, LockOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { login, registration } from '../actions/auth';
@@ -17,14 +17,7 @@ class Header extends React.Component {
   registrationForm = React.createRef();
   loginForm = React.createRef();
 
-  // constructor(props) {
-  //   super(props);
-
-  //   this.
-
-  //   const [registrationForm] = Form.useForm();
-  //   const [loginForm] = Form.useForm();
-  // }
+  currentUser = {};
 
   state = {
     signInModalVisible: false,
@@ -134,7 +127,8 @@ class Header extends React.Component {
   componentDidUpdate = (prevProps, prevState) => {
     const { 
       isLoginPending, isLoginFailed, isLoginSuccess,
-      isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors
+      isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors,
+      isAuthenticated
     } = this.props;
 
     if (this.state.signInModalVisible) {
@@ -162,10 +156,32 @@ class Header extends React.Component {
       }
       this.registrationErrors = registrationErrors;
     }
+
+    if (isAuthenticated) {
+      console.log(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem("user"));
+      this.currentUser = user;
+    }
+
+  }
+
+  renderCurrentUser() {
+    const menu = (
+      <Menu>
+        <Menu.Item key="0">
+          <a onClick={() => console.log("Logout")}>Log out</a>
+        </Menu.Item>
+      </Menu>
+    );
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.currentUser = user;
+
+    return <Dropdown overlay={menu}><span>{this.currentUser.name}</span></Dropdown>;
   }
 
   render() {
-    const { isRegistrationFailed, registrationErrors } = this.props;
+    const { isRegistrationFailed, registrationErrors, isAuthenticated } = this.props;
 
     return (
       <header>
@@ -173,10 +189,15 @@ class Header extends React.Component {
           <i className="logo" />
           <span>Repap</span>
         </span>
-        <div className="button">
-          <Button onClick={this.openSignInModal}>Login</Button>
-          <Button onClick={this.openSignUpModal}>Registration</Button>
-        </div>
+        { isAuthenticated ?
+          <div className="button">
+            {this.renderCurrentUser()}
+          </div> :
+          <div className="button">
+            <Button onClick={this.openSignInModal}>Login</Button>
+            <Button onClick={this.openSignUpModal}>Registration</Button>
+          </div>
+        }
         <Modal
           title="Login"
           centered
@@ -335,7 +356,7 @@ class Header extends React.Component {
             </Form.Item>
             
             <div>
-            { isRegistrationFailed && registrationErrors.map(error => <Alert message={error} type="error" />) }
+            { isRegistrationFailed && registrationErrors && registrationErrors.map(error => <Alert message={error} type="error" />) }
             </div>
             
             <Form.Item name="agreement" valuePropName="checked">
@@ -372,7 +393,9 @@ const mapStateToProps = state => ({
   isRegistrationFailed: state.authReducer.isRegistrationFailed,
   isRegistrationSuccess: state.authReducer.isRegistrationSuccess,
   isRegistrationPending: state.authReducer.isRegistrationPending,
-  registrationErrors: state.authReducer.registrationErrors
+  registrationErrors: state.authReducer.registrationErrors,
+
+  isAuthenticated: state.authReducer.isAuthenticated,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -47,6 +47,24 @@ class AuthApi {
       throw error;
     })
   }
+
+  static check(token) {
+
+    return fetch(`http://localhost:4000/auth/auto_login`, {
+      method: 'GET',
+      // body: JSON.stringify({}),
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
 }
 
 export default AuthApi;
