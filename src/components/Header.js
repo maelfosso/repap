@@ -2,14 +2,29 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { message, Tooltip, Typography, Button, Modal, Form, Input, Checkbox } from 'antd';
+import { message, Tooltip, Alert, Button, Modal, Form, Input, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
-import { login } from '../actions/auth';
+import { login, registration } from '../actions/auth';
 
 const key = 'auth';
 
+
+
 class Header extends React.Component {
+  
+  registrationErrors = [];
+  registrationForm = React.createRef();
+  loginForm = React.createRef();
+
+  // constructor(props) {
+  //   super(props);
+
+  //   this.
+
+  //   const [registrationForm] = Form.useForm();
+  //   const [loginForm] = Form.useForm();
+  // }
 
   state = {
     signInModalVisible: false,
@@ -49,6 +64,10 @@ class Header extends React.Component {
   };
 
   openSignInModal = (e) => {
+    if (this.loginForm.current) {
+      this.loginForm.current.resetFields();
+    }
+
     this.setState({
       signInModalVisible: !this.state.signInModalVisible,
       signUpModalVisible: false
@@ -56,6 +75,11 @@ class Header extends React.Component {
   }
 
   openSignUpModal = (e) => {
+    if (this.registrationForm.current) {
+      this.registrationForm.current.resetFields();
+      this.registrationErrors = [];
+    }
+
     this.setState({
       signInModalVisible: false,
       signUpModalVisible: !this.state.signUpModalVisible,
@@ -70,7 +94,10 @@ class Header extends React.Component {
   }
 
   onSignUpFinish = values => {
-    console.log('Received values of form: ', values);
+    const { registration } = this.props;
+    const { name, email, phone, password, password_confirmation } = values;
+    
+    registration(name, email, phone, password, password_confirmation);
   }
   
   onLoginPending = () => {
@@ -79,27 +106,67 @@ class Header extends React.Component {
 
   onLoginSuccess = () => {
     message.success({ content: 'Login successful!', key });
+    this.setState({
+      signInModalVisible: false
+    });
   }
 
   onLoginFailed = () => {
     message.error({ content: 'Sorry login failed!', key });
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-    const { isLoginPending, isLoginFailed, isLoginSuccess } = this.props;
+  onRegistrationPending = () => {
+    message.loading({ content: 'Registration in progress', key});
+  }
 
-    if (isLoginPending) {
-      this.onLoginPending();
+  onRegistrationSuccess = () => {
+    message.success({ content: 'Registration successful!', key });
+    this.setState({
+      signUpModalVisible: false
+    });
+    this.registrationForm.current.resetFields();
+  }
+
+  onRegistrationFailed = (errors) => {
+    message.error({ content: 'Sorry registration failed!', key });
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { 
+      isLoginPending, isLoginFailed, isLoginSuccess,
+      isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors
+    } = this.props;
+
+    if (this.state.signInModalVisible) {
+      if (isLoginPending) {
+        this.onLoginPending();
+      }
+      if (isLoginSuccess) {
+        this.onLoginSuccess();
+      }
+      if (isLoginFailed) {
+        this.onLoginFailed();
+      }
     }
-    if (isLoginSuccess) {
-      this.onLoginSuccess();
-    }
-    if (isLoginFailed) {
-      this.onLoginFailed();
+
+
+    if (this.state.signUpModalVisible) {
+      if (isRegistrationPending) {
+        this.onRegistrationPending();
+      }
+      if (isRegistrationSuccess) {
+        this.onRegistrationSuccess();
+      }
+      if (isRegistrationFailed) {
+        this.onRegistrationFailed(registrationErrors);
+      }
+      this.registrationErrors = registrationErrors;
     }
   }
 
   render() {
+    const { isRegistrationFailed, registrationErrors } = this.props;
+
     return (
       <header>
         <span className="logo-wrapper">
@@ -119,6 +186,7 @@ class Header extends React.Component {
         >          
           <Form
             name="sign_in"
+            ref={this.loginForm}
             className="sign-in-form"
             initialValues={{ remember: true }}
             onFinish={this.onSignInFinish}
@@ -169,9 +237,8 @@ class Header extends React.Component {
             name="sign_up"
             className="sign-up-form"
             onFinish={this.onSignUpFinish}
-            initialValues={{
-              
-            }}
+            initialValues={{}}
+            ref={this.registrationForm}
             scrollToFirstError
           >
             <Form.Item
@@ -266,7 +333,11 @@ class Header extends React.Component {
                 }}
               />
             </Form.Item>
-
+            
+            <div>
+            { isRegistrationFailed && registrationErrors.map(error => <Alert message={error} type="error" />) }
+            </div>
+            
             <Form.Item name="agreement" valuePropName="checked">
               <Checkbox>
                 I have read the <a href="">agreement</a>
@@ -289,12 +360,19 @@ class Header extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  login: (username, password) => dispatch(login(username, password))  
+  login: (username, password) => dispatch(login(username, password)),
+  registration: (name, email, phone, password, password_confirmation) => dispatch(registration(name, email, phone, password, password_confirmation))
 });
+
 const mapStateToProps = state => ({
   isLoginFailed: state.authReducer.isLoginFailed,
   isLoginSuccess: state.authReducer.isLoginSuccess,
-  isLoginPending: state.authReducer.isLoginPending
+  isLoginPending: state.authReducer.isLoginPending,
+
+  isRegistrationFailed: state.authReducer.isRegistrationFailed,
+  isRegistrationSuccess: state.authReducer.isRegistrationSuccess,
+  isRegistrationPending: state.authReducer.isRegistrationPending,
+  registrationErrors: state.authReducer.registrationErrors
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
