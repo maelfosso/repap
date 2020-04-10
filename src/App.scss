@@ -41,5 +41,17 @@
 
 .leaflet-container {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 64px);
+}
+
+.RMap {
+  padding-top: 64px;
+  position: relative;
+
+  .ant-col {
+    position: absolute;
+    background-color: transparent;
+    z-index: 2500;
+    width: 100%;
+  }
 }
