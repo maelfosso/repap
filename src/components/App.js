@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { enquireScreen } from 'enquire-js';
 import { Spin } from 'antd';
-import Header from './Header';
+import Header from '../containers/Header';
 import { checkToken } from '../actions/auth';
 import '../App.scss';
 import 'antd/dist/antd.css';
+import RMap from '../containers/RMap';
 
 
 let isMobile = false;
@@ -31,7 +32,7 @@ class App extends React.Component {
 
     const { checkToken } = this.props;
     const jwtToken = localStorage.getItem('token');
-    checkToken(jwtToken);
+    // checkToken(jwtToken);
   }
 
   componentDidUpdate = (prevState, prevProps) => {
@@ -56,7 +57,10 @@ class App extends React.Component {
     }
 
     return (
-      <Header key="header" className={this.state.showShadow ? 'show-shadow' : ''} />
+      <div>
+        <Header key="header" className={this.state.showShadow ? 'show-shadow' : ''} />
+        <RMap />
+      </div>
     );
   }
 
