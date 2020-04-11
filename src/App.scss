@@ -54,4 +54,22 @@
     z-index: 2500;
     width: 100%;
   }
+
+}
+
+.HotelList {
+  background-color: white;
+
+  .ant-col {
+    position: relative;
+  }
+
+  .ant-list-item .ant-col .ant-row {
+    margin: 0 1em;
+  }
+  
+  .ant-list-item .ant-col .ant-row .ant-col:last-child {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
