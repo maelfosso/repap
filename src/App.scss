@@ -67,9 +67,26 @@
   .ant-list-item .ant-col .ant-row {
     margin: 0 1em;
   }
-  
+
   .ant-list-item .ant-col .ant-row .ant-col:last-child {
     display: flex;
     justify-content: flex-end;
+  }
+}
+
+form {
+  background-color: white;
+
+  &.ant-form {
+    padding: 1em;
+
+    .ant-row {
+      margin-bottom: 0px;
+    }
+  }
+
+  .ant-col {
+    position: relative!important;
+    padding-bottom: 0px;
   }
 }
