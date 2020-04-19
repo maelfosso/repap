@@ -7,6 +7,7 @@ import { Fab } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import HotelList from '../components/HotelList';
 import { hotels } from '../utils/data';
+import '../css/RMap.scss';
 
 const { Search } = Input;
 const { Text } = Typography;

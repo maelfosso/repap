@@ -5,7 +5,7 @@ import { enquireScreen } from 'enquire-js';
 import { Spin } from 'antd';
 import Header from '../containers/Header';
 import { checkToken } from '../actions/auth';
-import '../App.scss';
+import '../css/App.scss';
 import 'antd/dist/antd.css';
 import RMap from '../containers/RMap';
 
@@ -32,7 +32,7 @@ class App extends React.Component {
 
     const { checkToken } = this.props;
     const jwtToken = localStorage.getItem('token');
-    // checkToken(jwtToken);
+    checkToken(jwtToken);
   }
 
   componentDidUpdate = (prevState, prevProps) => {
@@ -45,7 +45,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { isChecking } = this.props;
+    const { isChecking, isAuthenticated } = this.props;
 
     if (isChecking) {
       console.log("is checking..");
@@ -59,7 +59,7 @@ class App extends React.Component {
     return (
       <div>
         <Header key="header" className={this.state.showShadow ? 'show-shadow' : ''} />
-        <RMap />
+        { isAuthenticated ? <RMap /> : null }
       </div>
     );
   }
