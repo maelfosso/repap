@@ -69,16 +69,28 @@ class RMap extends React.Component {
         layout="vertical"
         name="hotel-creation"
       >
-        <Form.Item name="name" label="Name" required>
+        <Form.Item 
+          name="name" label="Name" required
+          rules={[{ required: true, message: 'Please input the name!' }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="phone" label="Phone" required>
+        <Form.Item 
+          name="phone" label="Phone" required
+          rules={[{ required: true, message: 'Please input the phone number!' }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="price" label="Price (min)" required>
+        <Form.Item 
+          name="price" label="Price (min)" required
+          rules={[{ required: true, message: 'Please the minimal price for a room!' }]}
+        >
           <InputNumber />
         </Form.Item>
-        <Form.Item name="address" label="Address" required>
+        <Form.Item 
+          name="address" label="Address" required
+          rules={[{ required: true, message: 'Please, the address to find it!' }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item name="infos" label="Informations/Description">
