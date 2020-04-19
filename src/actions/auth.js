@@ -9,7 +9,6 @@ import { generalError } from '../api/Helpers';
 export const login = (username, password) => {
   return async (dispatch) => {
     dispatch(loginPending());
-    console.log("Login", username, password);
 
     AuthApi.login(username, password)
     .then(response => response.json())
