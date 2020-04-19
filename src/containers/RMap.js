@@ -62,12 +62,17 @@ class RMap extends React.Component {
     // )
   }
 
+  onFinish = values => {
+    console.log('[onFinish] Success:', values);
+  }
+
   renderForm = () => {
     return (
       <Form
         labelAlign="left"
         layout="vertical"
         name="hotel-creation"
+        onFinish={this.onFinish}
       >
         <Form.Item 
           name="name" label="Name" required
