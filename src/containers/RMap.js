@@ -8,6 +8,7 @@ import 'react-tiny-fab/dist/styles.css';
 import HotelList from '../components/HotelList';
 import { hotels } from '../utils/data';
 import '../css/RMap.scss';
+import { add } from '../actions/hotels';
 
 const { Search } = Input;
 const { Text } = Typography;
@@ -63,10 +64,15 @@ class RMap extends React.Component {
   }
 
   onFinish = values => {
+    const { add } = this.props;
+
     console.log('[onFinish] Success:', values);
+    add(values);
   }
 
   renderForm = () => {
+    const { isAddPending } = this.props;
+
     return (
       <Form
         labelAlign="left"
@@ -102,7 +108,7 @@ class RMap extends React.Component {
           <Input.TextArea />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={isAddPending}>
             Submit
           </Button>
         </Form.Item>
@@ -147,4 +153,13 @@ class RMap extends React.Component {
   }
 }
 
-export default RMap;
+
+const mapDispatchToProps = dispatch => ({
+  add: (values) => dispatch(add(values)),
+});
+
+const mapStateToProps = state => ({
+  isAddPending: state.hotelsReducer.isAddPending  
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RMap);

@@ -3,7 +3,7 @@ import {
 } from '../actionTypes';
 
 const initialState = {
-
+  isAddPending: false
 };
 
 const hotels = (state = initialState, action) => {
@@ -15,8 +15,13 @@ const hotels = (state = initialState, action) => {
       return state;
 
     case HOTEL_ADD_PENDING:
-      
-      return state;
+      nextState = {
+        ...state,
+
+        isAddPending: true
+      }
+
+      return nextState;
 
     case HOTEL_ADD_SUCCESS:
 
