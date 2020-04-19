@@ -9,20 +9,21 @@ import { generalError } from '../api/Helpers';
 export const login = (username, password) => {
   return async (dispatch) => {
     dispatch(loginPending());
+    console.log("Login", username, password);
 
     AuthApi.login(username, password)
     .then(response => response.json())
     .then(responseJson => {
-      if (responseJson.failure) {
-        const { failure } = responseJson;
+      const { failure } = responseJson;
+      if (failure) {
         dispatch(loginFailed(failure));
       } else {
-        dispatch(loginSuccess());
-        
         const { jwt, user } = responseJson;
 
         localStorage.setItem("token", jwt);
         localStorage.setItem("user", JSON.stringify(user));
+
+        dispatch(loginSuccess());
       }
     });
   }
@@ -58,13 +59,13 @@ export const registration = (name, email, phone, password, password_confirmation
       if (responseJson.errors) {
         const { errors } = responseJson;
         dispatch(registrationFailed(errors));
-      } else {
-        dispatch(registrationSuccess());
-        
+      } else {        
         const { jwt, user } = responseJson;
-
+        
         localStorage.setItem("token", jwt);
         localStorage.setItem("user", JSON.stringify(user));
+
+        dispatch(registrationSuccess());
       }
     });
   }
@@ -92,7 +93,6 @@ export const registrationFailed = (errors) => {
 export const checkToken = (token) => {
   return async (dispatch) => {
     dispatch(checkTokenPending());
-  
     
     AuthApi.check(token)
     .then(response => response.json())
@@ -102,10 +102,11 @@ export const checkToken = (token) => {
         const { errors } = responseJson;
         dispatch(checkTokenFailed(errors));
       } else {
-        dispatch(checkTokenSuccess());
         
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(responseJson));
+        
+        dispatch(checkTokenSuccess());
       }
     });
   }

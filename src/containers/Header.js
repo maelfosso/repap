@@ -9,8 +9,6 @@ import { login, registration } from '../actions/auth';
 
 const key = 'auth';
 
-
-
 class Header extends React.Component {
   
   registrationErrors = [];

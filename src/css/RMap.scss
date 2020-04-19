@@ -1,0 +1,31 @@
+
+.RMap {
+  padding-top: 64px;
+  position: relative;
+
+  .ant-col {
+    position: absolute;
+    background-color: transparent;
+    z-index: 2500;
+    width: 100%;
+  }
+
+  
+  form {
+    background-color: white;
+
+    &.ant-form {
+      padding: 1em;
+
+      .ant-row {
+        margin-bottom: 0px;
+      }
+    }
+
+    .ant-col {
+      position: relative!important;
+      padding-bottom: 0px;
+    }
+  }
+
+}

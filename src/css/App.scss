@@ -38,3 +38,26 @@
     transform: rotate(360deg);
   }
 }
+
+.leaflet-container {
+  width: 100%;
+  height: calc(100vh - 64px);
+}
+
+
+.HotelList {
+  background-color: white;
+
+  .ant-col {
+    position: relative;
+  }
+
+  .ant-list-item .ant-col .ant-row {
+    margin: 0 1em;
+  }
+
+  .ant-list-item .ant-col .ant-row .ant-col:last-child {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
