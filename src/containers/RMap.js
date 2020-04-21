@@ -1,6 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Input, Typography, Col, Form, InputNumber, Button, Alert } from 'antd';
+import { 
+  Input, Typography, Col, 
+  Form, InputNumber, Button, Alert, 
+  Upload, Steps 
+} from 'antd';
+import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { Map, Marker, Popup, TileLayer, ZoomControl } from "react-leaflet";
 import { control } from "leaflet";
 import { Fab } from 'react-tiny-fab';
@@ -12,13 +17,23 @@ import { add } from '../actions/hotels';
 
 const { Search } = Input;
 const { Text } = Typography;
+const { Step } = Steps;
 
 const center = [3.844119, 11.501346];
+
+const normFile = e => {
+  console.log('Upload event:', e);
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e && e.fileList;
+};
 
 class RMap extends React.Component {
 
   state = {
-    isCreatingHotel: false
+    isCreatingHotel: false,
+    uploadedFileList: []
   };
 
   layout = {
@@ -112,78 +127,140 @@ class RMap extends React.Component {
   }
 
   renderForm = () => {
-    const { isAddPending, isAddedError, addingErrors } = this.props;
-    const { isNHotelLatLngMissed, latlngNewHotel } = this.state;
+    const { 
+      isAddPending, isAdded, addedHotel, 
+      isAddedError, addingErrors,
+      isAddingProcessOver
+    } = this.props;
+    const { isNHotelLatLngMissed, latlngNewHotel, uploadedFileList } = this.state;
     console.log('[renderForm]', isNHotelLatLngMissed, latlngNewHotel);
 
+    const current = !isAdded ? 0 : isAddingProcessOver ? 2 : 1;
+    const joinPhotoUrl = isAdded ? `/hotels/${addedHotel.id}/photos` : '';
+
+    const uploadProps = {
+      name: 'files',
+      multiple: true,
+      action: joinPhotoUrl,
+      listType: "picture-card",
+      onChange(info) {
+        const { status } = info.file;
+
+        if (status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (status === 'done') {
+
+          uploadedFileList.push(info.file);
+          this.setState({
+            uploadedFileList
+          });
+
+          message.success(`${info.file.name} file uploaded successfully.`);
+        } else if (status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+    };
+
     return (
-      <Form
-        labelAlign="left"
-        layout="vertical"
-        name="hotel-creation"
-        onFinish={this.onFinish}
-      >
-        {/* Main photo ... At least one photo */}
-        <Form.Item 
-          name="name" label="Name" required
-          rules={[{ required: true, message: 'Please input the name!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item 
-          name="phone" label="Phone" required
-          rules={[{ required: true, message: 'Please input the phone number!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item 
-          name="price" label="Price (min)" required
-          rules={[{ required: true, message: 'Please the minimal price for a room!' }]}
-        >
-          <InputNumber />
-        </Form.Item>
-        <Form.Item 
-          name="address" label="Address" required
-          rules={[{ required: true, message: 'Please, the address to find it!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item name="infos" label="Informations/Description">
-          <Input.TextArea />
-        </Form.Item>
-        <Form.Item name="latlng" label="Latitude/Longitude">
-          <div hidden>{latlngNewHotel}</div>
-          <Input value={latlngNewHotel}/>
-        </Form.Item>
+      <div className="adding-process">
+        <Steps current={current}>
+          <Step title="Form" />
+          <Step title="Photos"  />
+          <Step title="Done" />
+        </Steps>
+          
+        <div hidden={isAdded}>
+          <Form
+            labelAlign="left"
+            layout="vertical"
+            name="hotel-creation"
+            onFinish={this.onFinish}
+          >
+            {/* Main photo ... At least one photo */}
+            <Form.Item 
+              name="name" label="Name" required
+              rules={[{ required: true, message: 'Please input the name!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item 
+              name="phone" label="Phone" required
+              rules={[{ required: true, message: 'Please input the phone number!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item 
+              name="price" label="Price (min)" required
+              rules={[{ required: true, message: 'Please the minimal price for a room!' }]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item 
+              name="address" label="Address" required
+              rules={[{ required: true, message: 'Please, the address to find it!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="infos" label="Informations/Description">
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item name="latlng" label="Latitude/Longitude">
+              <div hidden>{latlngNewHotel}</div>
+              <Input value={latlngNewHotel}/>
+            </Form.Item>
+            
+            { isNHotelLatLngMissed ? 
+            <Alert
+              message="Position is missing"
+              description="The latitude and longitude of the new hotel is missing. Please, click on the map at the hotel position"
+              type="error"
+              closable
+              showIcon
+            />
+            : null }
 
-        { isNHotelLatLngMissed ? 
-        <Alert
-          message="Position is missing"
-          description="The latitude and longitude of the new hotel is missing. Please, click on the map at the hotel position"
-          type="error"
-          closable
-          showIcon
-        />
-        : null }
+            { isAddedError ?
+            <div>
+              <Alert
+                message="Errors"
+                description="An error occured when saving the hotel. Please, read them below and fix them or contact the administrator."
+                type="error"
+                closable
+                showIcon
+              />
+              {{ addingErrors }}
+            </div> 
+            : null }
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={isAddPending}>
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
 
-        { isAddedError ?
-        <div>
-          <Alert
-            message="Errors"
-            description="An error occured when saving the hotel. Please, read them below and fix them or contact the administrator."
-            type="error"
-            closable
-            showIcon
-          />
-          {{ addingErrors }}
-        </div> 
-        : null }
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={isAddPending}>
-            Submit
+        <div hidden={!isAdded} style="margin-top: 14px;">
+          <Upload.Dragger {...uploadProps}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+          </Upload.Dragger>
+
+          <Button 
+            type="primary" disabled={this.state.uploadedFileList.length == 0}
+          >
+            Done
           </Button>
-        </Form.Item>
-      </Form>
+        </div>
+
+        <div>
+
+        </div>
+      </div>
     )
   }
 
@@ -240,7 +317,9 @@ const mapStateToProps = state => ({
   addedHotel: state.hotelsReducer.addedHotel,
 
   isAddedError: state.hotelsReducer.isAddedError,
-  addingErrors: state.hotelsReducer.addingErrors
+  addingErrors: state.hotelsReducer.addingErrors,
+
+  isAddingProcessOver: state.hotelsReducer.isAddingProcessOver
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RMap);

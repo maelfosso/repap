@@ -5,9 +5,12 @@ import {
 const initialState = {
   addedHotel: null,
   isAdded: false,
+
   addingErrors: null,
   isAddedError: false,
-  isAddPending: false
+
+  isAddPending: false,
+  isAddingProcessOver: false
 };
 
 const hotels = (state = initialState, action) => {
