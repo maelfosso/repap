@@ -18,7 +18,7 @@ export const add = (hotel) => {
       } else {
         console.log(responseJson);
 
-        dispatch(addSuccess());
+        dispatch(addSuccess(responseJson));
       }
     });
   }
@@ -30,15 +30,16 @@ export const addPending = () => {
   }
 }
 
-export const addSuccess = () => {
+export const addSuccess = (hotel) => {
   return {
-    type: HOTEL_ADD_SUCCESS
+    type: HOTEL_ADD_SUCCESS,
+    hotel
   }
 }
 
-export const addFailed = (message) => {
+export const addFailed = (errors) => {
   return {
     type: HOTEL_ADD_FAILED,
-    message: message
+    errors
   }
 }

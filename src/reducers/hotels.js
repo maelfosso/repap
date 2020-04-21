@@ -3,6 +3,10 @@ import {
 } from '../actionTypes';
 
 const initialState = {
+  addedHotel: null,
+  isAdded: false,
+  addingErrors: null,
+  isAddedError: false,
   isAddPending: false
 };
 
@@ -24,10 +28,24 @@ const hotels = (state = initialState, action) => {
       return nextState;
 
     case HOTEL_ADD_SUCCESS:
+      nextState = {
+        ...state,
 
-      return state;
+        addedHotel: action.hotel,
+        isAdded: true,
+        isAddPending: false
+      }
+
+      return nextState;
 
     case HOTEL_ADD_FAILED:
+      nextState = {
+        ...state,
+
+        isAddPending: false,
+        isAddedError: true,
+        addingErrors: action.errors
+      }
 
       return state;
 

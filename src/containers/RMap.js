@@ -221,7 +221,13 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  isAddPending: state.hotelsReducer.isAddPending  
+  isAddPending: state.hotelsReducer.isAddPending,
+  
+  isAdded: state.hotelsReducer.isAdded,
+  addedHotel: state.hotelsReducer.addedHotel,
+
+  isAddedError: state.hotelsReducer.isAddedError,
+  addingErrors: state.hotelsReducer.addingErrors
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RMap);
