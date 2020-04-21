@@ -112,7 +112,7 @@ class RMap extends React.Component {
   }
 
   renderForm = () => {
-    const { isAddPending } = this.props;
+    const { isAddPending, isAddedError, addingErrors } = this.props;
     const { isNHotelLatLngMissed, latlngNewHotel } = this.state;
     console.log('[renderForm]', isNHotelLatLngMissed, latlngNewHotel);
 
@@ -164,6 +164,19 @@ class RMap extends React.Component {
           closable
           showIcon
         />
+        : null }
+
+        { isAddedError ?
+        <div>
+          <Alert
+            message="Errors"
+            description="An error occured when saving the hotel. Please, read them below and fix them or contact the administrator."
+            type="error"
+            closable
+            showIcon
+          />
+          {{ addingErrors }}
+        </div> 
         : null }
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={isAddPending}>
