@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Input, Typography, Col, Form, InputNumber, Button } from 'antd';
+import { Input, Typography, Col, Form, InputNumber, Button, Alert } from 'antd';
 import { Map, Marker, Popup, TileLayer, ZoomControl } from "react-leaflet";
 import { control } from "leaflet";
 import { Fab } from 'react-tiny-fab';
@@ -33,6 +33,8 @@ class RMap extends React.Component {
       md: { span: 12 }
     }
   }
+
+  latlngNewHotel = null;
   
   onSearch = (value) => {
     console.log('[onSearch]', value);
@@ -44,6 +46,7 @@ class RMap extends React.Component {
 
   onHotelCreationClick = () => {
     const { isCreatingHotel } = this.state;
+
     console.log('[onHotelCreation]');
     this.setState({
       isCreatingHotel: !isCreatingHotel
@@ -67,11 +70,51 @@ class RMap extends React.Component {
     const { add } = this.props;
 
     console.log('[onFinish] Success:', values);
-    add(values);
+
+    if (!this.latlngNewHotel) {
+      this.setState({
+        isNHotelLatLngMissed: true
+      });
+    } else {
+      values['latlng'] = this.latlngNewHotel;
+      console.log(values);
+      add(values);
+    }
+  }
+
+  onMapClick = values => {
+    console.log('[onMapClick]', values);
+
+    const { latlng } = values;
+    const { isCreatingHotel } = this.state;
+
+    if (isCreatingHotel) {
+      const { lat, lng } = latlng;
+      
+      this.latlngNewHotel = `${lat}, ${lng}`;
+      console.log('[LatLng]', this.latlngNewHotel);
+      
+      this.setState({
+        isNHotelLatLngMissed: false,
+        latlngNewHotel: this.latlngNewHotel
+      });
+    } else {
+
+    }
+  }
+
+  renderMarkerNewHotel = () => {
+    if (this.latlngNewHotel) { 
+      return <Marker position={this.latlngNewHotel.split(", ")}></Marker>
+    }
+
+    return null;
   }
 
   renderForm = () => {
     const { isAddPending } = this.props;
+    const { isNHotelLatLngMissed, latlngNewHotel } = this.state;
+    console.log('[renderForm]', isNHotelLatLngMissed, latlngNewHotel);
 
     return (
       <Form
@@ -80,6 +123,7 @@ class RMap extends React.Component {
         name="hotel-creation"
         onFinish={this.onFinish}
       >
+        {/* Main photo ... At least one photo */}
         <Form.Item 
           name="name" label="Name" required
           rules={[{ required: true, message: 'Please input the name!' }]}
@@ -107,6 +151,20 @@ class RMap extends React.Component {
         <Form.Item name="infos" label="Informations/Description">
           <Input.TextArea />
         </Form.Item>
+        <Form.Item name="latlng" label="Latitude/Longitude">
+          <div hidden>{latlngNewHotel}</div>
+          <Input value={latlngNewHotel}/>
+        </Form.Item>
+
+        { isNHotelLatLngMissed ? 
+        <Alert
+          message="LatLng is missing"
+          description="The latitude and longitude of the new hotel is missing. Please, click on the map at the hotel position"
+          type="error"
+          closable
+          showIcon
+        />
+        : null }
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={isAddPending}>
             Submit
@@ -132,6 +190,7 @@ class RMap extends React.Component {
           center={center} 
           zoom={12}
           whenReady={this.onMapReady}
+          onClick={this.onMapClick}
         >
           <ZoomControl position="topright" />
           <TileLayer
@@ -139,7 +198,10 @@ class RMap extends React.Component {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           
-          { !this.state.isCreatingHotel ? this.renderMarkers() : null }
+          { !this.state.isCreatingHotel ? 
+            this.renderMarkers() : 
+            this.renderMarkerNewHotel()
+          }
         </Map>
         <Fab
           icon={<span>+</span>} 

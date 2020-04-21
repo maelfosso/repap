@@ -4,7 +4,6 @@ import {
   CHECK_TOKEN_PENDING, CHECK_TOKEN_SUCCESS, CHECK_TOKEN_FAILED,
 } from '../actionTypes';
 import AuthApi from '../api/Auth';
-import { generalError } from '../api/Helpers';
 
 export const login = (username, password) => {
   return async (dispatch) => {
