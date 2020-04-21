@@ -4,7 +4,8 @@ import { handleTokenErrors } from './Helpers';
 
 let headers = {
   Accept: 'application/json',
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + localStorage.token
 }
 class HotelsAPI {
   static add(values) {
@@ -15,7 +16,7 @@ class HotelsAPI {
       headers: headers
     })
     .then(response => {
-
+      
       return handleTokenErrors(response); 
     })
     .catch(error => {

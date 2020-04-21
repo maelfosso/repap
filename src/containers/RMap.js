@@ -158,7 +158,7 @@ class RMap extends React.Component {
 
         { isNHotelLatLngMissed ? 
         <Alert
-          message="LatLng is missing"
+          message="Position is missing"
           description="The latitude and longitude of the new hotel is missing. Please, click on the map at the hotel position"
           type="error"
           closable
