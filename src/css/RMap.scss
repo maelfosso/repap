@@ -13,6 +13,18 @@
   .adding-process {
     background-color: white;
     padding: 14px;
+
+    height: calc(100vh - 64px);
+
+    .photos {
+      margin-top: 14px;
+    
+      .btn {
+        margin-top: 14px;
+      }
+    }
+
+
   }
   
   form {

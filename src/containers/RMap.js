@@ -252,20 +252,25 @@ class RMap extends React.Component {
           </Form>
         </div>
 
-        <div hidden={!isAdded}>
-          <Upload.Dragger {...uploadProps}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-            <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-          </Upload.Dragger>
-
-          <Button 
-            type="primary" disabled={this.state.uploadedFileList.length == 0}
-          >
-            Done
-          </Button>
+        <div hidden={!isAdded} className="photos">
+          <div>
+            <Upload.Dragger {...uploadProps}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+            </Upload.Dragger>
+          </div>
+          
+          <div className="btn">
+            <Button 
+              type="primary" block
+              disabled={this.state.uploadedFileList.length == 0}
+            >
+              Done
+            </Button>
+          </div>
         </div>
 
         <div>
