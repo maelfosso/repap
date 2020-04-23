@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { 
   Input, Typography, Col, 
   Form, InputNumber, Button, Alert, 
-  Upload, Steps 
+  Upload, Steps, message 
 } from 'antd';
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { Map, Marker, Popup, TileLayer, ZoomControl } from "react-leaflet";
@@ -126,41 +126,52 @@ class RMap extends React.Component {
     return null;
   }
 
+  _updateUploadedFileList = uploadedFileList => {
+    this.setState({
+      uploadedFileList: uploadedFileList
+    });
+  }
+
+  onUploadChange = (info) => {
+    const { status } = info.file;
+    const { uploadedFileList } = this.state;
+
+    if (status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (status === 'done') {
+
+      uploadedFileList.push(info.file);
+      this._updateUploadedFileList(uploadedFileList);
+
+      message.success(`${info.file.name} file uploaded successfully.`);
+    } else if (status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  }
+
   renderForm = () => {
     const { 
       isAddPending, isAdded, addedHotel, 
       isAddedError, addingErrors,
       isAddingProcessOver
     } = this.props;
-    const { isNHotelLatLngMissed, latlngNewHotel, uploadedFileList } = this.state;
+    const { isNHotelLatLngMissed, latlngNewHotel } = this.state;
     console.log('[renderForm]', isNHotelLatLngMissed, latlngNewHotel);
 
     const current = !isAdded ? 0 : isAddingProcessOver ? 2 : 1;
-    const joinPhotoUrl = isAdded ? `/hotels/${addedHotel.id}/photos` : '';
+    const joinPhotoUrl = isAdded ? `http://localhost:4000/hotels/${addedHotel.id}/photos` : '';
 
     const uploadProps = {
       name: 'files',
       multiple: true,
-      action: joinPhotoUrl,
       listType: "picture-card",
-      onChange(info) {
-        const { status } = info.file;
-
-        if (status !== 'uploading') {
-          console.log(info.file, info.fileList);
-        }
-        if (status === 'done') {
-
-          uploadedFileList.push(info.file);
-          this.setState({
-            uploadedFileList
-          });
-
-          message.success(`${info.file.name} file uploaded successfully.`);
-        } else if (status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
-        }
+      accept: '.jpg, .jpeg, .png',
+      action: joinPhotoUrl,
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
       },
+      onChange: this.onUploadChange
     };
 
     return (
@@ -241,7 +252,7 @@ class RMap extends React.Component {
           </Form>
         </div>
 
-        <div hidden={!isAdded} style="margin-top: 14px;">
+        <div hidden={!isAdded}>
           <Upload.Dragger {...uploadProps}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
