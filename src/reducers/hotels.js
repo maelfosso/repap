@@ -1,5 +1,6 @@
 import {
-  HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING
+  HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING, 
+  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT
 } from '../actionTypes';
 
 const initialState = {
@@ -10,7 +11,9 @@ const initialState = {
   isAddedError: false,
 
   isAddPending: false,
-  isAddingProcessOver: false
+  isAddingProcessOver: false,
+
+  waitABit: false
 };
 
 const hotels = (state = initialState, action) => {
@@ -51,6 +54,23 @@ const hotels = (state = initialState, action) => {
       }
 
       return state;
+
+    case HOTEL_ADD_PROCESS_OVER:
+      nextState = {
+        ...state,
+
+        isAddingProcessOver: true,
+        waitABit: false,
+      }
+
+    case WAIT_A_BIT:
+      nextState = {
+        ...state,
+
+        waitABit: true
+      }
+
+      return nextState;
 
     default:
 

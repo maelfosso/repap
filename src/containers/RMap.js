@@ -132,7 +132,7 @@ class RMap extends React.Component {
     });
   }
 
-  onUploadChange = (info) => {
+  _onUploadChange = (info) => {
     const { status } = info.file;
     const { uploadedFileList } = this.state;
 
@@ -148,6 +148,10 @@ class RMap extends React.Component {
     } else if (status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
     }
+  }
+
+  _onNewHotelDone = () => {
+
   }
 
   renderForm = () => {
@@ -171,7 +175,7 @@ class RMap extends React.Component {
       headers: {
         'Authorization': `Bearer ${localStorage.token}`
       },
-      onChange: this.onUploadChange
+      onChange: this._onUploadChange
     };
 
     return (
@@ -266,6 +270,7 @@ class RMap extends React.Component {
           <div className="btn">
             <Button 
               type="primary" block
+              onClick={this._onNewHotelDone}
               disabled={this.state.uploadedFileList.length == 0}
             >
               Done
@@ -273,8 +278,8 @@ class RMap extends React.Component {
           </div>
         </div>
 
-        <div>
-
+        <div hidden={!isAddingProcessOver}>
+          
         </div>
       </div>
     )
