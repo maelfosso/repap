@@ -23,6 +23,20 @@ class HotelsAPI {
       throw error;
     })
   }
+
+  static get(id) {
+    return fetch(`http://localhost:4000/hotels/${id}`, {
+      method: 'GET',
+      headers: headers
+    })
+    .then(response => {
+      
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
   
 }
 

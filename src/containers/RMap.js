@@ -1,4 +1,13 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+  withRouter,
+  Redirect
+} from "react-router-dom";
 import { connect } from 'react-redux';
 import { 
   Input, Typography, Col, 
@@ -11,9 +20,11 @@ import { control } from "leaflet";
 import { Fab } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import HotelList from '../components/HotelList';
+import HotelDetails from '../components/HotelDetails';
+
 import { hotels } from '../utils/data';
 import '../css/RMap.scss';
-import { add } from '../actions/hotels';
+import { add, addProcessOver } from '../actions/hotels';
 
 const { Search } = Input;
 const { Text } = Typography;
@@ -61,11 +72,17 @@ class RMap extends React.Component {
 
   onHotelCreationClick = () => {
     const { isCreatingHotel } = this.state;
+    // const history = useHistory();
 
     console.log('[onHotelCreation]');
-    this.setState({
-      isCreatingHotel: !isCreatingHotel
-    });
+    // this.setState({
+    //   isCreatingHotel: !isCreatingHotel
+    // });
+
+    this.props.history.push("/hotels/20");
+    // history.push("hotels/20");
+    // <Redirect to='/hotels/20' />
+    // this.setState({...this.state, redirect: true});
   }
 
   renderMarkers = () => {
@@ -150,8 +167,11 @@ class RMap extends React.Component {
     }
   }
 
-  _onNewHotelDone = () => {
+  _onNewHotelDone = (id) => {
+    console.log('[onNewHotelDone]', id);
+    const { addProcessOver } = this.props;
 
+    addProcessOver(id);
   }
 
   renderForm = () => {
@@ -270,7 +290,6 @@ class RMap extends React.Component {
           <div className="btn">
             <Button 
               type="primary" block
-              onClick={this._onNewHotelDone}
               disabled={this.state.uploadedFileList.length == 0}
             >
               Done
@@ -286,42 +305,63 @@ class RMap extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/hotels/20" />
+    }
 
     return (
-      <div className="RMap">
-        <Col xs={24} md={8} className="search">
-        { !this.state.isCreatingHotel ? (
-          <div>
-            <Search placeholder="Search a hotel" onSearch={this.onSearch} enterButton />
-            <HotelList hotels={hotels} />
+      
+        <div>
+          <div className="RMap">
+
+            <Col xs={24} md={8} className="search">
+            {/* { !this.state.isCreatingHotel ? (
+              <div>
+                <Search placeholder="Search a hotel" onSearch={this.onSearch} enterButton />
+              </div>
+            ) : this.renderForm() } */}
+              
+                <Switch>
+                  <Route exact path="/hotels">
+                    <HotelList /> 
+                  </Route>
+                  <Route exact path="/hotels/:hotelId">
+                    <HotelDetails />
+                  </Route>
+                </Switch>
+                
+              
+
+            </Col>        
+            <Map 
+              center={center} 
+              zoom={12}
+              whenReady={this.onMapReady}
+              onClick={this.onMapClick}
+            >
+              <ZoomControl position="topright" />
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
+              
+              { !this.state.isCreatingHotel ? 
+                this.renderMarkers() : 
+                this.renderMarkerNewHotel()
+              }
+            </Map>
+            <Fab
+              icon={<span>+</span>} 
+              mainButtonStyles={{ backgroundColor: '#e74c3c' }}
+              onClick={this.onHotelCreationClick}
+              event={null}
+              children={false}
+            ></Fab>
           </div>
-        ) : this.renderForm() }
-        </Col>        
-        <Map 
-          center={center} 
-          zoom={12}
-          whenReady={this.onMapReady}
-          onClick={this.onMapClick}
-        >
-          <ZoomControl position="topright" />
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          />
+
           
-          { !this.state.isCreatingHotel ? 
-            this.renderMarkers() : 
-            this.renderMarkerNewHotel()
-          }
-        </Map>
-        <Fab
-          icon={<span>+</span>} 
-          mainButtonStyles={{ backgroundColor: '#e74c3c' }}
-          onClick={this.onHotelCreationClick}
-          event={null}
-          children={false}
-        ></Fab>
-      </div>
+        </div>
+      
     );
   }
 }
@@ -329,6 +369,7 @@ class RMap extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   add: (values) => dispatch(add(values)),
+  addProcessOver: (id) => dispatch(addProcessOver(id))
 });
 
 const mapStateToProps = state => ({
@@ -343,4 +384,4 @@ const mapStateToProps = state => ({
   isAddingProcessOver: state.hotelsReducer.isAddingProcessOver
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RMap);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RMap));
