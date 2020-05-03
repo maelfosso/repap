@@ -29,34 +29,53 @@ class AddHotel extends React.Component {
     uploadedFileList: []
   }
 
+  formRef = React.createRef();
 
-
-  onFinish = values => {
+  _onFinish = values => {
     const { add } = this.props;
-
-    console.log('[onFinish] Success:', values);
-    console.log(values);
     add(values);
+  }
 
-    // if (!this.latlngNewHotel) {
-    //   this.setState({
-    //     isNHotelLatLngMissed: true
-    //   });
-    // } else {
-    //   // values['latlng'] = this.latlngNewHotel;
-    //   console.log(values);
-    //   add(values);
-    // }
+  _onHotelCreationDone = (hotelId) => {
+    this.props.history.push(`/hotels/${hotelId}`);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.latlngNewHotel !== this.props.latlngNewHotel) {
+      this.formRef.current.setFieldsValue({
+        latlng: this.props.latlngNewHotel
+      });
+    }
+  }
+
+  _updateUploadedFileList = uploadedFileList => {
+    this.setState({
+      uploadedFileList: uploadedFileList
+    });
+  }
+
+  _onUploadChange = (info) => {
+    const { status } = info.file;
+    const { uploadedFileList } = this.state;
+
+    if (status !== 'uploading') {}
+    if (status === 'done') {
+
+      uploadedFileList.push(info.file);
+      this._updateUploadedFileList(uploadedFileList);
+
+      message.success(`${info.file.name} file uploaded successfully.`);
+    } else if (status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
   }
 
   render = () => {
-    console.log('[AddHotel] - [Props]', this.props);
     const { 
       isAddPending, isAdded, addedHotel, 
       isAddedError, addingErrors,
-      isAddingProcessOver, latlngNewHotel
+      isAddingProcessOver
     } = this.props;
-    // console.log('[renderForm]', isNHotelLatLngMissed, latlngNewHotel);
 
     const current = !isAdded ? 0 : isAddingProcessOver ? 2 : 1;
     const joinPhotoUrl = isAdded ? `http://localhost:4000/hotels/${addedHotel.id}/photos` : '';
@@ -78,7 +97,6 @@ class AddHotel extends React.Component {
         <Steps current={current}>
           <Step title="Form" />
           <Step title="Photos"  />
-          {/* <Step title="Done" /> */}
         </Steps>
           
         <div hidden={isAdded}>
@@ -86,7 +104,8 @@ class AddHotel extends React.Component {
             labelAlign="left"
             layout="vertical"
             name="hotel-creation"
-            onFinish={this.onFinish}
+            ref={this.formRef}
+            onFinish={this._onFinish}
           >
             <Form.Item 
               name="name" label="Name" required
@@ -119,19 +138,8 @@ class AddHotel extends React.Component {
               name="latlng" label="Latitude/Longitude" required
               rules={[{ required: true, message: 'Please indicate on the MAP the hotel position' }]}
             >
-              <div hidden>{latlngNewHotel}</div>
-              <Input value={latlngNewHotel}/>
+              <Input />
             </Form.Item>
-            
-            {/* { isNHotelLatLngMissed ? 
-            <Alert
-              message="Position is missing"
-              description="The latitude and longitude of the new hotel is missing. Please, click on the map at the hotel position"
-              type="error"
-              closable
-              showIcon
-            />
-            : null } */}
 
             { isAddedError ?
             <div>
@@ -167,6 +175,7 @@ class AddHotel extends React.Component {
           <div className="btn">
             <Button 
               type="primary" block
+              onClick={() => this._onHotelCreationDone(addedHotel ? addedHotel.id : -1)}
               disabled={this.state.uploadedFileList.length == 0}
             >
               Done

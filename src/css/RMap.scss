@@ -3,7 +3,7 @@
   padding-top: 64px;
   position: relative;
 
-  .ant-col {
+  > .ant-col {
     position: absolute;
     background-color: transparent;
     z-index: 2500;
@@ -42,6 +42,35 @@
       position: relative!important;
       padding-bottom: 0px;
     }
+  }
+
+  .HotelDetails {
+    background-color: white;
+    height: calc(100vh - 64px);
+    position: relative;
+
+    .infos {
+      padding: 0 2em;
+      
+      img {
+        width: 100%;
+        height: 50vh;
+        object-fit: cover;
+      }
+    }
+
+    .favorite {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+
+      Button {
+        height: 2em;
+        font-size: x-large;
+        border-radius: 0;
+      }
+    }
+
   }
 
 }
