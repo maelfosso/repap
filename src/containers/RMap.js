@@ -1,10 +1,7 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useHistory,
   withRouter,
   Redirect
 } from "react-router-dom";
@@ -21,6 +18,7 @@ import { Fab } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import HotelList from '../components/HotelList';
 import HotelDetails from '../components/HotelDetails';
+import AddHotel from '../components/AddHotel';
 
 import { hotels } from '../utils/data';
 import '../css/RMap.scss';
@@ -72,17 +70,10 @@ class RMap extends React.Component {
 
   onHotelCreationClick = () => {
     const { isCreatingHotel } = this.state;
-    // const history = useHistory();
 
     console.log('[onHotelCreation]');
-    // this.setState({
-    //   isCreatingHotel: !isCreatingHotel
-    // });
 
-    this.props.history.push("/hotels/20");
-    // history.push("hotels/20");
-    // <Redirect to='/hotels/20' />
-    // this.setState({...this.state, redirect: true});
+    this.props.history.push("/add");
   }
 
   renderMarkers = () => {
@@ -116,11 +107,15 @@ class RMap extends React.Component {
 
   onMapClick = values => {
     console.log('[onMapClick]', values);
+    console.log(this.props);
 
     const { latlng } = values;
     const { isCreatingHotel } = this.state;
-
-    if (isCreatingHotel) {
+    const { pathname } = this.props.location;
+    
+    console.log('[onMapClick] Path', pathname);
+    // if (isCreatingHotel || 
+    if (pathname === '/add') {
       const { lat, lng } = latlng;
       
       this.latlngNewHotel = `${lat}, ${lng}`;
@@ -131,7 +126,7 @@ class RMap extends React.Component {
         latlngNewHotel: this.latlngNewHotel
       });
     } else {
-
+      console.log('[onMapClick] Nothing');
     }
   }
 
@@ -305,9 +300,8 @@ class RMap extends React.Component {
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to="/hotels/20" />
-    }
+    const { latlngNewHotel } = this.state;
+    console.log('[RMap][render] LatLng', latlngNewHotel);
 
     return (
       
@@ -327,6 +321,9 @@ class RMap extends React.Component {
                   </Route>
                   <Route exact path="/hotels/:hotelId">
                     <HotelDetails />
+                  </Route>
+                  <Route exact path="/add">
+                    <AddHotel latlngNewHotel={this.state.latlngNewHotel}/>
                   </Route>
                 </Switch>
                 

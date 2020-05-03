@@ -55,7 +55,6 @@ class HotelDetails extends React.Component {
 
     return (
       <div className="HotelDetails">
-        <h1>Details HOTELS</h1>
         <Carousel>
           { hotel.photos.map(photo => <div key={photo.id}><img src={`http://localhost:4000/${photo.url}`} /></div>) }
         </Carousel>
