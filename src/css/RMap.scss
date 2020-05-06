@@ -8,13 +8,14 @@
     background-color: transparent;
     z-index: 2500;
     width: 100%;
+
+
+    background-color: white;
+    height: calc(100vh - 64px);
   }
 
   .adding-process {
-    background-color: white;
     padding: 14px;
-
-    height: calc(100vh - 64px);
 
     .photos {
       margin-top: 14px;
@@ -45,8 +46,7 @@
   }
 
   .HotelDetails {
-    background-color: white;
-    height: calc(100vh - 64px);
+    
     position: relative;
 
     .infos {

@@ -1,15 +1,39 @@
 import React from 'react';
-import { List, Typography, Divider, Row, Col } from 'antd';
+import { List, Typography, Spin, Row, Col } from 'antd';
 import { HeartTwoTone } from '@ant-design/icons';
+import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
 
-const HotelList = (props) => {
-  console.log(props);
-  const { hotels } = props;
-  console.log(hotels);
+class HotelList extends React.Component {
+  state = {
+    hotels: undefined,
+    isLoading: true
+  }
 
-  const renderItem = (item) => {
+  _fetchHotels = () => {
+    console.log('[fetchHotels]', this.props);
+
+    this.setState({ ...this.state, isLoading: true });
+
+    HotelsAPI.all()
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      this.setState({
+        ...this.state,
+        isLoading: false,
+        hotels: responseJson
+      });
+      
+    });
+  }
+
+  componentDidMount = () => {
+    this._fetchHotels();
+  }
+
+  renderItem = (item) => {
     console.log(item);
 
     return (
@@ -28,21 +52,29 @@ const HotelList = (props) => {
     );
   }
 
-  return <div className="HotelList">
-    {/* { hotels.map(item => renderItem(item))} */}
-    <List 
-      itemLayout="horizontal"
-      dataSource={hotels}
-      renderItem={renderItem}
-      pagination={{
-        onChange: page => {
-          console.log(page);
-        },
-        pageSize: 3,
-      }}
-    />
-  </div> 
+  render = () => {
+    const { hotels } = this.state;
+
+    if (!hotels) {
+      return <Spin />
+    }
+
+    return <div className="HotelList">
+      {/* { hotels.map(item => renderItem(item))} */}
+      <List 
+        itemLayout="horizontal"
+        dataSource={hotels}
+        renderItem={this.renderItem}
+        pagination={{
+          onChange: page => {
+            console.log(page);
+          },
+          pageSize: 3,
+        }}
+      />
+    </div> 
+  }
+
 }
-// { hotels.map(item => renderItem(item))}
 
 export default HotelList;
