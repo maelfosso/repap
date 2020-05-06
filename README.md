@@ -66,3 +66,42 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+- Add a photo
+  * One on many photo
+  * name, description, address, phone, etc...
+
+- After adding a hotel, the hotel appears at the place of Form
+
+- You could find a hotel. The result will be listed. If you click on one hotel, the navigation will continue by swiping with a possibility to return to the list
+
+- By swiping you could toggle one hotel as your favorite.
+
+- On the navbar, you have a Favorite and Search menu.
+
+- Favorite, list you all your favorite (swiping mode) with their location on the map. The map is centered on the marker of the current one and it's bigger.
+
+- Search bring you a form with an input to search for a hotel. The position of the Marker result appears on the map
+
+- Logout
+
+Hotel:
+  - name
+  - phone
+  - address
+  - description
+  - price of smallest room
+  - one or many photos
+
+  - creator
+
+  - Belongs to users
+
+User
+  - name
+  - email
+
+  - Created hotels
+  
+  - Favourite Hotels
