@@ -2,8 +2,8 @@ import React from 'react';
 import {
   withRouter
 } from "react-router-dom";
-import { EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons';
-import { Carousel, Typography, Spin, Row, Col, Button } from 'antd';
+import { EnvironmentOutlined, PhoneOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { Carousel, Typography, Spin, Row, Col, Button, Empty } from 'antd';
 import HotelsAPI from '../api/Hotels';
 
 const { Title, Text, Paragraph } = Typography;
@@ -17,7 +17,6 @@ class HotelDetails extends React.Component {
   _fetchDetails = () => {
     let { hotelId } = this.props.match.params;
     let { onCurrentHotelPosition } = this.props;
-    console.log('[fetchDetails]', this.props, onCurrentHotelPosition);
 
     this.setState({ ...this.state, isLoading: true });
 
@@ -47,6 +46,11 @@ class HotelDetails extends React.Component {
     return <div key={photo.id}></div>
   }
 
+  _goBack = () => {
+    const { history } = this.props;
+    history.goBack();
+  }
+
   render = () => {
     const { hotel } = this.state;
 
@@ -57,9 +61,11 @@ class HotelDetails extends React.Component {
     return (
       <div className="HotelDetails">
         <div className="infos">  
-          <Carousel>
-            { hotel.photos.map(photo => <div key={photo.id}><img src={`http://localhost:4000/${photo.url}`} /></div>) }
-          </Carousel>
+          <Button icon={<ArrowLeftOutlined />} type="link" onClick={this._goBack}></Button>
+          { hotel.photos.length > 0 ?
+            <Carousel>
+              { hotel.photos.map(photo => <div key={photo.id}><img src={`http://localhost:4000/${photo.url}`} /></div>) }
+          </Carousel> : <Empty description={false} /> }
           <Title>{hotel.name}</Title>
           <Row justify="space-between">
             <Col>

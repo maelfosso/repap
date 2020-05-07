@@ -35,16 +35,16 @@ class HotelList extends React.Component {
     this._fetchHotels();
   }
 
-  goToHotel = (id) => {
+  _goToHotel = (id) => {
     this.props.history.push(`/hotels/${id}`);
   }
 
-  renderItem = (item) => {
+  _renderItem = (item) => {
     console.log(item);
 
     return (
       <List.Item
-        actions={[<Button type="link" icon={<RightOutlined />} size="small" onClick={() => this.goToHotel(item.id)}/>]}
+        actions={[<Button type="link" icon={<RightOutlined />} size="small" onClick={() => this._goToHotel(item.id)}/>]}
       >
         <Col flex="auto">
           <Row justify="space-between">
@@ -72,7 +72,7 @@ class HotelList extends React.Component {
       <List 
         itemLayout="horizontal"
         dataSource={hotels}
-        renderItem={this.renderItem}
+        renderItem={this._renderItem}
         pagination={{
           onChange: page => {}
         }}
