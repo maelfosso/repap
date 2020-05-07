@@ -1,6 +1,10 @@
 import React from 'react';
 import { List, Typography, Spin, Row, Col, Rate, Button } from 'antd';
 import { HeartTwoTone, RightOutlined } from '@ant-design/icons';
+import {
+  withRouter
+} from "react-router-dom";
+
 import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
@@ -31,12 +35,16 @@ class HotelList extends React.Component {
     this._fetchHotels();
   }
 
+  goToHotel = (id) => {
+    this.props.history.push(`/hotels/${id}`);
+  }
+
   renderItem = (item) => {
     console.log(item);
 
     return (
       <List.Item
-        actions={[<Button type="link" icon={<RightOutlined />} size="small" />]}
+        actions={[<Button type="link" icon={<RightOutlined />} size="small" onClick={() => this.goToHotel(item.id)}/>]}
       >
         <Col flex="auto">
           <Row justify="space-between">
@@ -66,9 +74,7 @@ class HotelList extends React.Component {
         dataSource={hotels}
         renderItem={this.renderItem}
         pagination={{
-          onChange: page => {
-            console.log(page);
-          }
+          onChange: page => {}
         }}
       />
     </div> 
@@ -76,4 +82,4 @@ class HotelList extends React.Component {
 
 }
 
-export default HotelList;
+export default withRouter(HotelList);
