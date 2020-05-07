@@ -21,7 +21,7 @@ class HotelList extends React.Component {
     HotelsAPI.all()
     .then(response => response.json())
     .then(responseJson => {
-
+      console.log(responseJson);
       this.setState({
         ...this.state,
         isLoading: false,
@@ -47,8 +47,9 @@ class HotelList extends React.Component {
         actions={[<Button type="link" icon={<RightOutlined />} size="small" onClick={() => this._goToHotel(item.id)}/>]}
       >
         <Col flex="auto">
-          <Row justify="space-between">
-            <Text strong>{item.name}</Text>
+          <Row>
+            <Text strong>{item.name}</Text> 
+            <Text>&nbsp;<HeartTwoTone twoToneColor="#eb2f96" hidden={item.favorite} /></Text>
           </Row>
           <Row justify="space-between">
             <Col><Rate value={+item.rating} allowHalf={true} disabled={true}/></Col>

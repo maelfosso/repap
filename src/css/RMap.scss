@@ -8,12 +8,12 @@
     background-color: transparent;
     z-index: 2500;
     width: 100%;
-
-    background-color: white;
-    height: calc(100vh - 64px);
   }
 
   .adding-process {
+
+    background-color: white;
+    height: calc(100vh - 64px);
     padding: 14px;
 
     .photos {
@@ -43,9 +43,17 @@
     }
   }
 
+  .HotelList {
+    background-color: white;
+    height: calc(100vh - 64px);
+  }
+
   .HotelDetails {
     position: relative;
     height: 100%;
+
+    background-color: white;
+    height: calc(100vh - 64px);
 
     .infos {
       padding: 0 2em;

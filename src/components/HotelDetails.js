@@ -57,7 +57,7 @@ class HotelDetails extends React.Component {
     if (!hotel) {
       return <Spin />
     }
-
+    console.log('[HotelDetails]', hotel);
     return (
       <div className="HotelDetails">
         <div className="infos">  
