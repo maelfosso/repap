@@ -1,6 +1,6 @@
 import {
   HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT
+  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST
 } from '../actionTypes';
 
 const initialState = {
@@ -13,10 +13,11 @@ const initialState = {
   isAddPending: false,
   isAddingProcessOver: false,
 
-  waitABit: false
+  waitABit: false,
+  hotels: []
 };
 
-const hotels = (state = initialState, action) => {
+const rotels = (state = initialState, action) => {
   let nextState;
 
   switch (action.type) {
@@ -53,7 +54,7 @@ const hotels = (state = initialState, action) => {
         addingErrors: action.errors
       }
 
-      return state;
+      return nextState;
 
     case HOTEL_ADD_PROCESS_OVER:
       nextState = {
@@ -62,6 +63,7 @@ const hotels = (state = initialState, action) => {
         isAddingProcessOver: true,
         waitABit: false,
       }
+      return nextState;
 
     case WAIT_A_BIT:
       nextState = {
@@ -72,10 +74,20 @@ const hotels = (state = initialState, action) => {
 
       return nextState;
 
+    case HOTEL_LIST:
+      nextState = {
+        ...state,
+
+        waitABit: false,
+        hotels: action.hotels
+      }
+
+      return nextState;
+
     default:
 
       return state;
   }
 }
 
-export default hotels;
+export default rotels;

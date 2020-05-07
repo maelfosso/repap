@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { List, Typography, Spin, Row, Col, Rate, Button } from 'antd';
 import { HeartTwoTone, RightOutlined } from '@ant-design/icons';
 import {
   withRouter
 } from "react-router-dom";
 
+import { list } from '../actions/hotels';
 import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
@@ -32,7 +34,8 @@ class HotelList extends React.Component {
   }
 
   componentDidMount = () => {
-    this._fetchHotels();
+    const { list } = this.props;
+    list();
   }
 
   _goToHotel = (id) => {
@@ -40,8 +43,6 @@ class HotelList extends React.Component {
   }
 
   _renderItem = (item) => {
-    console.log(item);
-
     return (
       <List.Item
         actions={[<Button type="link" icon={<RightOutlined />} size="small" onClick={() => this._goToHotel(item.id)}/>]}
@@ -63,9 +64,9 @@ class HotelList extends React.Component {
   }
 
   render = () => {
-    const { hotels } = this.state;
-
-    if (!hotels) {
+    const { hotels, waitABit } = this.props;
+    
+    if (waitABit) {
       return <Spin />
     }
 
@@ -83,4 +84,13 @@ class HotelList extends React.Component {
 
 }
 
-export default withRouter(HotelList);
+const mapDispatchToProps = dispatch => ({
+  list: () => dispatch(list()),
+});
+
+const mapStateToProps = state => ({
+  waitABit: state.hotelsReducer.waitABit,
+  hotels: state.hotelsReducer.hotels,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HotelList));

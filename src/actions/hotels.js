@@ -1,6 +1,6 @@
 import {
   HOTEL_ADD, HOTEL_ADD_PENDING, HOTEL_ADD_SUCCESS, HOTEL_ADD_FAILED, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT
+  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST
 } from '../actionTypes';
 import HotelsAPI from '../api/Hotels';
 
@@ -45,34 +45,42 @@ export const addFailed = (errors) => {
   }
 }
 
-export const addProcessOver = (id) => {
-  return async (dispatch) => {
+// export const addProcessOver = (id) => {
+//   return async (dispatch) => {
     
-    dispatch(waitABit());
+//     dispatch(waitABit());
 
-    HotelsAPI.get(id)
-    .then(response => response.json())
-    .then(responseJson => {
+//     HotelsAPI.get(id)
+//     .then(response => response.json())
+//     .then(responseJson => {
       
-      return {
-        type: HOTEL_ADD_PROCESS_OVER,
-        hotel: responseJson
-      }
-      // const { failure } = responseJson;
-
-      // if (failure) {
-      //   dispatch(addFailed(failure));
-      // } else {
-      //   console.log(responseJson);
-
-      //   dispatch(addSuccess(responseJson));
-      // }
-    });
-  }
-}
+//       return {
+//         type: HOTEL_ADD_PROCESS_OVER,
+//         hotel: responseJson
+//       }
+//     });
+//   }
+// }
 
 export const waitABit = () => {
   return {
     type: WAIT_A_BIT
+  }
+}
+
+export const list = () => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.all()
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_LIST,
+        hotels: responseJson
+      });
+      
+    });
   }
 }
