@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 
 import { list, waitABit } from '../actions/hotels';
-import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
 

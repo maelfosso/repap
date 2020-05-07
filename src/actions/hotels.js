@@ -1,6 +1,6 @@
 import {
-  HOTEL_ADD, HOTEL_ADD_PENDING, HOTEL_ADD_SUCCESS, HOTEL_ADD_FAILED, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, 
+  HOTEL_ADD_PENDING, HOTEL_ADD_SUCCESS, HOTEL_ADD_FAILED, 
+  WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, 
   HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED
 } from '../actionTypes';
 import HotelsAPI from '../api/Hotels';
@@ -18,8 +18,6 @@ export const add = (hotel) => {
       if (failure) {
         dispatch(addFailed(failure));
       } else {
-        console.log(responseJson);
-
         dispatch(addSuccess(responseJson));
       }
     });
@@ -45,23 +43,6 @@ export const addFailed = (errors) => {
     errors
   }
 }
-
-// export const addProcessOver = (id) => {
-//   return async (dispatch) => {
-    
-//     dispatch(waitABit());
-
-//     HotelsAPI.get(id)
-//     .then(response => response.json())
-//     .then(responseJson => {
-      
-//       return {
-//         type: HOTEL_ADD_PROCESS_OVER,
-//         hotel: responseJson
-//       }
-//     });
-//   }
-// }
 
 export const waitABit = () => {
   return {

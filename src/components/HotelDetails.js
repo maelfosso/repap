@@ -8,7 +8,7 @@ import { Carousel, Typography, Spin, Row, Col, Button, Empty } from 'antd';
 
 import { details, favorite, unfavorite } from '../actions/hotels';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 class HotelDetails extends React.Component {
   state = {
@@ -48,7 +48,7 @@ class HotelDetails extends React.Component {
     if (waitABit || !hotel) {
       return <Spin />
     }
-    console.log('[render]', hotel);
+    
     return (
       <div className="HotelDetails">
         <div className="infos">  

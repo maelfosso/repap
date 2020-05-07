@@ -86,7 +86,6 @@ const rotels = (state = initialState, action) => {
       return nextState;
 
     case HOTEL_DETAIL:
-      const { hotels } = state;
       
       nextState = {
         ...state,

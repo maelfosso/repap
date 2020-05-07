@@ -172,7 +172,6 @@ class Header extends React.Component {
     }
 
     if (isAuthenticated) {
-      console.log(localStorage.getItem("user"));
       const user = JSON.parse(localStorage.getItem("user"));
       this.currentUser = user;
     }

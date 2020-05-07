@@ -20,13 +20,9 @@ import HotelList from '../components/HotelList';
 import HotelDetails from '../components/HotelDetails';
 import AddHotel from '../components/AddHotel';
 
-import { hotels } from '../utils/data';
 import '../css/RMap.scss';
-import { add, addProcessOver } from '../actions/hotels';
 
-const { Search } = Input;
 const { Text } = Typography;
-const { Step } = Steps;
 
 const center = [3.844119, 11.501346];
 
@@ -38,10 +34,6 @@ class RMap extends React.Component {
   };
 
   latlngNewHotel = null;
-  
-  onSearch = (value) => {}
-
-  onMapReady = (map) => {}
 
   onHotelCreationClick = () => {
     this.props.history.push("/add");
@@ -93,7 +85,6 @@ class RMap extends React.Component {
 
   onMapClick = values => {
     const { latlng } = values;
-    const { isCreatingHotel } = this.state;
     const { pathname } = this.props.location;
     
     if (pathname === '/add') {
