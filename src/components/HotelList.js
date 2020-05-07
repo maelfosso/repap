@@ -1,6 +1,6 @@
 import React from 'react';
-import { List, Typography, Spin, Row, Col } from 'antd';
-import { HeartTwoTone } from '@ant-design/icons';
+import { List, Typography, Spin, Row, Col, Rate, Button } from 'antd';
+import { HeartTwoTone, RightOutlined } from '@ant-design/icons';
 import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
@@ -12,14 +12,12 @@ class HotelList extends React.Component {
   }
 
   _fetchHotels = () => {
-    console.log('[fetchHotels]', this.props);
-
     this.setState({ ...this.state, isLoading: true });
 
     HotelsAPI.all()
     .then(response => response.json())
     .then(responseJson => {
-      
+
       this.setState({
         ...this.state,
         isLoading: false,
@@ -37,16 +35,19 @@ class HotelList extends React.Component {
     console.log(item);
 
     return (
-      <List.Item>
-        <Col>
+      <List.Item
+        actions={[<Button type="link" icon={<RightOutlined />} size="small" />]}
+      >
+        <Col flex="auto">
           <Row justify="space-between">
             <Text strong>{item.name}</Text>
-            <Text>{item.price}</Text>
           </Row>
           <Row justify="space-between">
-            <Text>{item.address}</Text>
-            <HeartTwoTone twoToneColor={ item.favorite ? "#eb2f96" : "" } />
+            <Col><Rate value={+item.rating} allowHalf={true} disabled={true}/></Col>
           </Row>
+        </Col>
+        <Col>
+          <Text style={{textAlign: 'right'}}>${item.price}<br/>per night (min price)</Text>
         </Col>
       </List.Item>
     );
@@ -60,7 +61,6 @@ class HotelList extends React.Component {
     }
 
     return <div className="HotelList">
-      {/* { hotels.map(item => renderItem(item))} */}
       <List 
         itemLayout="horizontal"
         dataSource={hotels}
@@ -68,8 +68,7 @@ class HotelList extends React.Component {
         pagination={{
           onChange: page => {
             console.log(page);
-          },
-          pageSize: 3,
+          }
         }}
       />
     </div> 
