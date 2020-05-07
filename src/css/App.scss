@@ -61,3 +61,23 @@
     justify-content: flex-end;
   }
 }
+
+header {
+  ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    
+    li {
+      display: block;
+      padding: 0 1rem;
+      line-height: 64px;
+
+      a {
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+  }
+}

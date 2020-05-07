@@ -1,48 +1,85 @@
 import React from 'react';
-import { List, Typography, Divider, Row, Col } from 'antd';
-import { HeartTwoTone } from '@ant-design/icons';
+import { List, Typography, Spin, Row, Col, Rate, Button } from 'antd';
+import { HeartTwoTone, RightOutlined } from '@ant-design/icons';
+import {
+  withRouter
+} from "react-router-dom";
+
+import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
 
-const HotelList = (props) => {
-  console.log(props);
-  const { hotels } = props;
-  console.log(hotels);
+class HotelList extends React.Component {
+  state = {
+    hotels: undefined,
+    isLoading: true
+  }
 
-  const renderItem = (item) => {
+  _fetchHotels = () => {
+    this.setState({ ...this.state, isLoading: true });
+
+    HotelsAPI.all()
+    .then(response => response.json())
+    .then(responseJson => {
+
+      this.setState({
+        ...this.state,
+        isLoading: false,
+        hotels: responseJson
+      });
+      
+    });
+  }
+
+  componentDidMount = () => {
+    this._fetchHotels();
+  }
+
+  _goToHotel = (id) => {
+    this.props.history.push(`/hotels/${id}`);
+  }
+
+  _renderItem = (item) => {
     console.log(item);
 
     return (
-      <List.Item>
-        <Col>
+      <List.Item
+        actions={[<Button type="link" icon={<RightOutlined />} size="small" onClick={() => this._goToHotel(item.id)}/>]}
+      >
+        <Col flex="auto">
           <Row justify="space-between">
             <Text strong>{item.name}</Text>
-            <Text>{item.price}</Text>
           </Row>
           <Row justify="space-between">
-            <Text>{item.address}</Text>
-            <HeartTwoTone twoToneColor={ item.favorite ? "#eb2f96" : "" } />
+            <Col><Rate value={+item.rating} allowHalf={true} disabled={true}/></Col>
           </Row>
+        </Col>
+        <Col>
+          <Text style={{textAlign: 'right'}}>${item.price}<br/>per night (min price)</Text>
         </Col>
       </List.Item>
     );
   }
 
-  return <div className="HotelList">
-    {/* { hotels.map(item => renderItem(item))} */}
-    <List 
-      itemLayout="horizontal"
-      dataSource={hotels}
-      renderItem={renderItem}
-      pagination={{
-        onChange: page => {
-          console.log(page);
-        },
-        pageSize: 3,
-      }}
-    />
-  </div> 
-}
-// { hotels.map(item => renderItem(item))}
+  render = () => {
+    const { hotels } = this.state;
 
-export default HotelList;
+    if (!hotels) {
+      return <Spin />
+    }
+
+    return <div className="HotelList">
+      <List 
+        itemLayout="horizontal"
+        dataSource={hotels}
+        renderItem={this._renderItem}
+        pagination={{
+          onChange: page => {}
+        }}
+      />
+    </div> 
+  }
+
+}
+
+export default withRouter(HotelList);

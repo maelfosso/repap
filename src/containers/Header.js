@@ -2,8 +2,24 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { message, Tooltip, Alert, Button, Modal, Form, Input, Checkbox, Menu, Dropdown } from 'antd';
-import { UserOutlined, LockOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { 
+  message, Tooltip, Alert, Button, 
+  Modal, Form, Input, Checkbox, Menu, Dropdown,
+  Row, Col
+} from 'antd';
+import { 
+  UserOutlined, LockOutlined, 
+  QuestionCircleOutlined 
+} from '@ant-design/icons';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from "react-router-dom";
 
 import { login, registration } from '../actions/auth';
 
@@ -183,19 +199,42 @@ class Header extends React.Component {
 
     return (
       <header>
-        <span className="logo-wrapper">
-          <i className="logo" />
-          <span>Repap</span>
-        </span>
-        { isAuthenticated ?
-          <div className="button">
-            {this.renderCurrentUser()}
-          </div> :
-          <div className="button">
-            <Button onClick={this.openSignInModal}>Login</Button>
-            <Button onClick={this.openSignUpModal}>Registration</Button>
-          </div>
-        }
+        <Row>
+          <Col span={4}>
+            <span className="logo-wrapper">
+              <i className="logo" />
+              <span>Repap</span>
+            </span>
+          </Col>
+          <Col span={20}>
+            <Row justify="space-between">
+              <Col>
+              { isAuthenticated ?
+                <ul>
+                  <li>
+                    <Link to="/hotels">All hotels</Link>
+                  </li>
+                  <li>
+                    <Link to="/favorites">Favorites</Link>
+                  </li>
+                </ul>
+                : null }
+              </Col>
+              <Col>
+                { isAuthenticated ?
+                  <div className="button">
+                    {this.renderCurrentUser()}
+                  </div> :
+                  <div className="button">
+                    <Button onClick={this.openSignInModal}>Login</Button>
+                    <Button onClick={this.openSignUpModal}>Registration</Button>
+                  </div>
+                }
+              </Col>
+            </Row>
+          </Col>
+
+        </Row>
         <Modal
           title="Login"
           centered

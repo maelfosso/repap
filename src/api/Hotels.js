@@ -8,6 +8,20 @@ let headers = {
   'Authorization': 'Bearer ' + localStorage.token
 }
 class HotelsAPI {
+
+  static all() {
+    return fetch(`http://localhost:4000/hotels/`, {
+      method: 'GET',
+      headers: headers
+    })
+    .then(response => {
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
+
   static add(values) {
 
     return fetch(`http://localhost:4000/hotels/`, {

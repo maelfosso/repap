@@ -7,20 +7,14 @@ import Header from '../containers/Header';
 import { checkToken } from '../actions/auth';
 import '../css/App.scss';
 import 'antd/dist/antd.css';import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch
+  BrowserRouter as Router
 } from "react-router-dom";
 import RMap from '../containers/RMap';
-import HotelDetails from './HotelDetails';
 
 let isMobile = false;
 enquireScreen((b) => {
   isMobile = b;
 });
-// const { path } = useRouteMatch();
 
 class App extends React.Component {
   state = {
@@ -51,12 +45,9 @@ class App extends React.Component {
   }
 
   render() {
-
-    // const { path } = useRouteMatch();
     const { isChecking, isAuthenticated } = this.props;
 
     if (isChecking) {
-      console.log("is checking..");
       return (
         <div>
           <Spin size="large" />
@@ -68,21 +59,11 @@ class App extends React.Component {
       <Router>
       <div>
         <Header key="header" className={this.state.showShadow ? 'show-shadow' : ''} />
-        {/* <Router>
-          <Switch>
-            <Route exact path="/">
-              <RMap /> 
-            </Route>
-            <Route exact path="hotels/:hotelId">
-              <HotelDetails />
-            </Route>
-          </Switch>
-          
-        </Router> */}
+        
         { isAuthenticated ? 
-            <RMap />
-            : null 
-          }
+          <RMap />
+          : null 
+        }
       </div>
       </Router>
     );
