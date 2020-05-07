@@ -6,7 +6,7 @@ import {
   withRouter
 } from "react-router-dom";
 
-import { list } from '../actions/hotels';
+import { list, waitABit } from '../actions/hotels';
 import HotelsAPI from '../api/Hotels';
 
 const { Text } = Typography;
@@ -17,28 +17,15 @@ class HotelList extends React.Component {
     isLoading: true
   }
 
-  _fetchHotels = () => {
-    this.setState({ ...this.state, isLoading: true });
-
-    HotelsAPI.all()
-    .then(response => response.json())
-    .then(responseJson => {
-      console.log(responseJson);
-      this.setState({
-        ...this.state,
-        isLoading: false,
-        hotels: responseJson
-      });
-      
-    });
-  }
-
   componentDidMount = () => {
     const { list } = this.props;
     list();
   }
 
   _goToHotel = (id) => {
+    const { waitABitFunc } = this.props;
+
+    waitABitFunc();
     this.props.history.push(`/hotels/${id}`);
   }
 
@@ -69,7 +56,7 @@ class HotelList extends React.Component {
     if (waitABit) {
       return <Spin />
     }
-
+    
     return <div className="HotelList">
       <List 
         itemLayout="horizontal"
@@ -86,6 +73,7 @@ class HotelList extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   list: () => dispatch(list()),
+  waitABitFunc: () => dispatch(waitABit())
 });
 
 const mapStateToProps = state => ({

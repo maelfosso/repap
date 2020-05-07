@@ -37,19 +37,6 @@ class RMap extends React.Component {
     uploadedFileList: []
   };
 
-  layout = {
-    labelCol: {
-      xs: { span: 12 },
-      sm: { span: 12 },
-      md: { span: 12 }
-    },
-    wrapperCol: {
-      xs: { span: 12 },
-      sm: { span: 8 },
-      md: { span: 12 }
-    }
-  }
-
   latlngNewHotel = null;
   
   onSearch = (value) => {}
@@ -62,7 +49,12 @@ class RMap extends React.Component {
 
   renderMarkers = () => {
     const { pathname } = this.props.location;
-    const { latlngNewHotel, markers } = this.state;
+    const { waitABit, hotel, hotels } = this.props;
+    const { latlngNewHotel } = this.state;
+
+    if (waitABit) {
+      return;
+    }
 
     if (pathname === '/') {
       return (
@@ -76,12 +68,20 @@ class RMap extends React.Component {
           <Popup>Hotel position</Popup>
         </Marker>
       ) : null;
-    } else {
-      return markers ? markers.map((marker, ix) => (
-        <Marker key={ix} position={marker.geo.split(", ")}>
-          <Popup><Text strong>{marker.name}</Text></Popup>
+    } else if (pathname.startsWith('/hotels/')) {
+      if (!hotel) return;
+
+      return (
+        <Marker position={hotel.latlng.split(", ")}>
+          <Popup><Text strong>{hotel.name}</Text></Popup>
         </Marker>
-      )) : null;
+      )
+    } else {
+      return hotels.map((hotel, ix) => (
+        <Marker key={ix} position={hotel.latlng.split(", ")}>
+          <Popup><Text strong>{hotel.name}</Text></Popup>
+        </Marker>
+      ));
     }
   }
 
@@ -151,4 +151,10 @@ class RMap extends React.Component {
   }
 }
 
-export default withRouter(RMap);
+const mapStateToProps = state => ({
+  waitABit: state.hotelsReducer.waitABit,
+  hotel: state.hotelsReducer.hotel,
+  hotels: state.hotelsReducer.hotels,
+});
+
+export default connect(mapStateToProps, null)(withRouter(RMap));

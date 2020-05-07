@@ -24,5 +24,8 @@ export const HOTEL_ADD_SUCCESS = 'hotel.add.success';
 export const HOTEL_ADD_FAILED = 'hotel.add.failure';
 export const HOTEL_ADD_PROCESS_OVER = 'hotel.add.process.over';
 export const HOTEL_LIST = 'hotel.list';
+export const HOTEL_DETAIL = 'hotel.detail';
+export const HOTEL_FAVORITE_CREATED = 'hotel.favorites.created';
+export const HOTEL_FAVORITE_DELETED = 'hotel.favorites.deleted';
 
 export const WAIT_A_BIT = 'wait.a.bit';

@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   withRouter
 } from "react-router-dom";
 import { EnvironmentOutlined, PhoneOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Carousel, Typography, Spin, Row, Col, Button, Empty } from 'antd';
-import HotelsAPI from '../api/Hotels';
+
+import { details, favorite, unfavorite } from '../actions/hotels';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -14,32 +16,11 @@ class HotelDetails extends React.Component {
     isLoading: true
   }
 
-  _fetchDetails = () => {
-    let { hotelId } = this.props.match.params;
-    let { onCurrentHotelPosition } = this.props;
-
-    this.setState({ ...this.state, isLoading: true });
-
-    HotelsAPI.get(hotelId)
-    .then(response => response.json())
-    .then(responseJson => {
-      
-      this.setState({
-        ...this.state,
-        isLoading: false,
-        hotel: responseJson
-      });
-
-      onCurrentHotelPosition({
-        name: responseJson.name,
-        geo: responseJson.latlng
-      });
-      
-    });
-  }
-
   componentDidMount = () => {
-    this._fetchDetails();
+    let { hotelId } = this.props.match.params;
+    const { details } = this.props;
+
+    details(hotelId);
   }
 
   renderPhotos = (photo) => {
@@ -51,13 +32,23 @@ class HotelDetails extends React.Component {
     history.goBack();
   }
 
-  render = () => {
-    const { hotel } = this.state;
+  _toggleFavorite = () => {
+    const { hotel, favorite, unfavorite } = this.props;
 
-    if (!hotel) {
+    if (hotel.favorite) {
+      unfavorite(hotel.favorite)
+    } else {
+      favorite(hotel.id);
+    }
+  }
+
+  render = () => {
+    const { hotel, waitABit } = this.props;
+    
+    if (waitABit || !hotel) {
       return <Spin />
     }
-    console.log('[HotelDetails]', hotel);
+    console.log('[render]', hotel);
     return (
       <div className="HotelDetails">
         <div className="infos">  
@@ -83,8 +74,8 @@ class HotelDetails extends React.Component {
           </Paragraph>
         </div>
         <div className="favorite">
-          <Button type="primary" block>
-            MARK AS FAVORITE
+          <Button type={hotel.favorite ? "danger" : "primary" } block onClick={this._toggleFavorite}>
+            {hotel.favorite ? "UNFAVORITE" : "MARK AS FAVORITE" }
           </Button>
         </div>
       </div> 
@@ -93,4 +84,15 @@ class HotelDetails extends React.Component {
 
 } 
 
-export default withRouter(HotelDetails);
+const mapDispatchToProps = dispatch => ({
+  details: (id) => dispatch(details(id)),
+  favorite: (id) => dispatch(favorite(id)),
+  unfavorite: (id) => dispatch(unfavorite(id)),
+});
+
+const mapStateToProps = state => ({
+  waitABit: state.hotelsReducer.waitABit,
+  hotel: state.hotelsReducer.hotel,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HotelDetails));

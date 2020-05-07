@@ -1,6 +1,7 @@
 import {
   HOTEL_ADD, HOTEL_ADD_PENDING, HOTEL_ADD_SUCCESS, HOTEL_ADD_FAILED, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST
+  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, 
+  HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED
 } from '../actionTypes';
 import HotelsAPI from '../api/Hotels';
 
@@ -79,6 +80,57 @@ export const list = () => {
       dispatch({
         type: HOTEL_LIST,
         hotels: responseJson
+      });
+      
+    });
+  }
+}
+
+export const details = (id) => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.get(id)
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_DETAIL,
+        hotel: responseJson
+      });
+      
+    });
+  }
+}
+
+export const favorite = (id) => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.favorite(id)
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_FAVORITE_CREATED,
+        favorite: responseJson
+      });
+      
+    });
+  }
+}
+
+export const unfavorite = (id) => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.unfavorite(id)
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_FAVORITE_DELETED,
+        deleted: responseJson
       });
       
     });
