@@ -11,21 +11,21 @@ export const signIn = (username, password) => fetch('http://localhost:4000/auth/
 }).then(response => response.json());
 
 export const handleTokenErrors = response => {
-  if (response.status == 401) {
-    // store.dispatch(invalidToken());
-  } else if (response.status == 411) {
-    // store.dispatch(tokenNotSupplied())
+  if (response.status === 401) {
+    return 401;
+  } if (response.status === 411) {
+    return 411;
   }
 
   return response;
 };
 
 export const generalError = response => {
-  if (response == 'Type Error: Network request failed') {
-    // store.dispatch(connectionError("Network request failed"));
+  if (response === 'Type Error: Network request failed') {
+    return -1;
   }
 
-  return null; // store.dispatch(connectionError("There is an error."))
+  return null;
 };
 
-export const asyncError = error => null; // store.dispatch(asyncError(error));
+export const asyncError = error => error;

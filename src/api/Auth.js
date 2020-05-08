@@ -1,6 +1,4 @@
-// import Config from 'react-native-config';
 import { handleTokenErrors } from './Helpers';
-
 
 const headers = {
   Accept: 'application/json',
