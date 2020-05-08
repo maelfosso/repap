@@ -74,10 +74,10 @@ class AddHotel extends React.Component {
     const { 
       isAddPending, isAdded, addedHotel, 
       isAddedError, addingErrors,
-      isAddingProcessOver
+      // isAddingProcessOver
     } = this.props;
 
-    const current = !isAdded ? 0 : isAddingProcessOver ? 2 : 1;
+    const current = !isAdded ? 0 : 1; // isAddingProcessOver ? 2 : 1;
     const joinPhotoUrl = isAdded ? `http://localhost:4000/hotels/${addedHotel.id}/photos` : '';
 
     const uploadProps = {
@@ -190,7 +190,7 @@ class AddHotel extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   add: (values) => dispatch(add(values)),
-  addProcessOver: (id) => dispatch(addProcessOver(id))
+  // addProcessOver: (id) => dispatch(addProcessOver(id))
 });
 
 const mapStateToProps = state => ({
@@ -202,7 +202,7 @@ const mapStateToProps = state => ({
   isAddedError: state.hotelsReducer.isAddedError,
   addingErrors: state.hotelsReducer.addingErrors,
 
-  isAddingProcessOver: state.hotelsReducer.isAddingProcessOver
+  // isAddingProcessOver: state.hotelsReducer.isAddingProcessOver
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AddHotel));

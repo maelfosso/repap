@@ -20,13 +20,9 @@ import HotelList from '../components/HotelList';
 import HotelDetails from '../components/HotelDetails';
 import AddHotel from '../components/AddHotel';
 
-import { hotels } from '../utils/data';
 import '../css/RMap.scss';
-import { add, addProcessOver } from '../actions/hotels';
 
-const { Search } = Input;
 const { Text } = Typography;
-const { Step } = Steps;
 
 const center = [3.844119, 11.501346];
 
@@ -37,24 +33,7 @@ class RMap extends React.Component {
     uploadedFileList: []
   };
 
-  layout = {
-    labelCol: {
-      xs: { span: 12 },
-      sm: { span: 12 },
-      md: { span: 12 }
-    },
-    wrapperCol: {
-      xs: { span: 12 },
-      sm: { span: 8 },
-      md: { span: 12 }
-    }
-  }
-
   latlngNewHotel = null;
-  
-  onSearch = (value) => {}
-
-  onMapReady = (map) => {}
 
   onHotelCreationClick = () => {
     this.props.history.push("/add");
@@ -62,7 +41,12 @@ class RMap extends React.Component {
 
   renderMarkers = () => {
     const { pathname } = this.props.location;
-    const { latlngNewHotel, markers } = this.state;
+    const { waitABit, hotel, hotels } = this.props;
+    const { latlngNewHotel } = this.state;
+
+    if (waitABit) {
+      return;
+    }
 
     if (pathname === '/') {
       return (
@@ -76,12 +60,20 @@ class RMap extends React.Component {
           <Popup>Hotel position</Popup>
         </Marker>
       ) : null;
-    } else {
-      return markers ? markers.map((marker, ix) => (
-        <Marker key={ix} position={marker.geo.split(", ")}>
-          <Popup><Text strong>{marker.name}</Text></Popup>
+    } else if (pathname.startsWith('/hotels/')) {
+      if (!hotel) return;
+
+      return (
+        <Marker position={hotel.latlng.split(", ")}>
+          <Popup><Text strong>{hotel.name}</Text></Popup>
         </Marker>
-      )) : null;
+      )
+    } else {
+      return hotels.map((hotel, ix) => (
+        <Marker key={ix} position={hotel.latlng.split(", ")}>
+          <Popup><Text strong>{hotel.name}</Text></Popup>
+        </Marker>
+      ));
     }
   }
 
@@ -93,7 +85,6 @@ class RMap extends React.Component {
 
   onMapClick = values => {
     const { latlng } = values;
-    const { isCreatingHotel } = this.state;
     const { pathname } = this.props.location;
     
     if (pathname === '/add') {
@@ -111,13 +102,25 @@ class RMap extends React.Component {
     return (
       <div>
         <div className="RMap">
-          <Col xs={24} md={8} className="search">
+          <Col xs={24} md={12} className="search">
             <Switch>
+              {/* <Route exact path="/favorites" component={props => <HotelList {...props} timestamp={new Date().toString()} />} /> */}
+              {/* <Route exact path='/favorites' component={ (props) => (
+                <HotelList timestamp={new Date().toString()} {...props} />
+              )}/>
+              <Route exact path='/hotels' component={ (props) => (
+                <HotelList timestamp={new Date().toString()} {...props} />
+              )}/> */}
+              {/* <Route exact path="/hotels" component={props => <HotelList {...props} />} />
+              <Route exact path="/favorites" component={props => <HotelList {...props} />} /> */}
+              <Route exact path="/favorites">
+                <HotelList /> 
+              </Route>
               <Route exact path="/hotels">
                 <HotelList /> 
               </Route>
               <Route exact path="/hotels/:hotelId">
-                <HotelDetails onCurrentHotelPosition={this.onCurrentHotelPosition}/>
+                <HotelDetails />
               </Route>
               <Route exact path="/add">
                 <AddHotel latlngNewHotel={this.state.latlngNewHotel}/>
@@ -151,4 +154,10 @@ class RMap extends React.Component {
   }
 }
 
-export default withRouter(RMap);
+const mapStateToProps = state => ({
+  waitABit: state.hotelsReducer.waitABit,
+  hotel: state.hotelsReducer.hotel,
+  hotels: state.hotelsReducer.hotels,
+});
+
+export default connect(mapStateToProps, null)(withRouter(RMap));

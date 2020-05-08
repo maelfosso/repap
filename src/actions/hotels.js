@@ -1,6 +1,7 @@
 import {
-  HOTEL_ADD, HOTEL_ADD_PENDING, HOTEL_ADD_SUCCESS, HOTEL_ADD_FAILED, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT
+  HOTEL_ADD_PENDING, HOTEL_ADD_SUCCESS, HOTEL_ADD_FAILED, 
+  WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, 
+  HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED
 } from '../actionTypes';
 import HotelsAPI from '../api/Hotels';
 
@@ -17,8 +18,6 @@ export const add = (hotel) => {
       if (failure) {
         dispatch(addFailed(failure));
       } else {
-        console.log(responseJson);
-
         dispatch(addSuccess(responseJson));
       }
     });
@@ -45,34 +44,93 @@ export const addFailed = (errors) => {
   }
 }
 
-export const addProcessOver = (id) => {
-  return async (dispatch) => {
-    
-    dispatch(waitABit());
+export const waitABit = () => {
+  return {
+    type: WAIT_A_BIT
+  }
+}
 
-    HotelsAPI.get(id)
+export const all = () => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.all()
     .then(response => response.json())
     .then(responseJson => {
       
-      return {
-        type: HOTEL_ADD_PROCESS_OVER,
-        hotel: responseJson
-      }
-      // const { failure } = responseJson;
-
-      // if (failure) {
-      //   dispatch(addFailed(failure));
-      // } else {
-      //   console.log(responseJson);
-
-      //   dispatch(addSuccess(responseJson));
-      // }
+      dispatch({
+        type: HOTEL_LIST,
+        hotels: responseJson
+      });
+      
     });
   }
 }
 
-export const waitABit = () => {
-  return {
-    type: WAIT_A_BIT
+export const details = (id) => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.get(id)
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_DETAIL,
+        hotel: responseJson
+      });
+      
+    });
+  }
+}
+
+export const favorite = (id) => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.favorite(id)
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_FAVORITE_CREATED,
+        favorite: responseJson
+      });
+      
+    });
+  }
+}
+
+export const unfavorite = (id) => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.unfavorite(id)
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_FAVORITE_DELETED,
+        deleted: responseJson
+      });
+      
+    });
+  }
+}
+
+export const favorites = () => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.favorites()
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_LIST,
+        hotels: responseJson
+      });
+      
+    });
   }
 }

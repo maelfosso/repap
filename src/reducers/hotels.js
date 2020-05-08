@@ -1,6 +1,6 @@
 import {
   HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT
+  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED
 } from '../actionTypes';
 
 const initialState = {
@@ -13,10 +13,12 @@ const initialState = {
   isAddPending: false,
   isAddingProcessOver: false,
 
-  waitABit: false
+  waitABit: false,
+  hotels: [],
+  hotel: null
 };
 
-const hotels = (state = initialState, action) => {
+const rotels = (state = initialState, action) => {
   let nextState;
 
   switch (action.type) {
@@ -53,7 +55,7 @@ const hotels = (state = initialState, action) => {
         addingErrors: action.errors
       }
 
-      return state;
+      return nextState;
 
     case HOTEL_ADD_PROCESS_OVER:
       nextState = {
@@ -62,6 +64,7 @@ const hotels = (state = initialState, action) => {
         isAddingProcessOver: true,
         waitABit: false,
       }
+      return nextState;
 
     case WAIT_A_BIT:
       nextState = {
@@ -72,10 +75,57 @@ const hotels = (state = initialState, action) => {
 
       return nextState;
 
+    case HOTEL_LIST:
+      nextState = {
+        ...state,
+
+        waitABit: false,
+        hotels: action.hotels
+      }
+      
+      return nextState;
+
+    case HOTEL_DETAIL:
+      
+      nextState = {
+        ...state,
+
+        waitABit: false,
+        hotel: action.hotel
+      }
+
+      return nextState;
+    
+    case HOTEL_FAVORITE_CREATED:
+      const fhotel = state.hotel;
+      fhotel.favorite = action.favorite.id;
+
+      nextState = {
+        ...state,
+
+        waitABit: false,
+        hotel: fhotel
+      }
+
+      return nextState;
+
+    case HOTEL_FAVORITE_DELETED:
+      const dhotel = state.hotel;
+      dhotel.favorite = action.deleted ? false : dhotel.favorite;
+      
+      nextState = {
+        ...state,
+
+        waitABit: false,
+        hotel: dhotel
+      }
+
+      return nextState;
+    
     default:
 
       return state;
   }
 }
 
-export default hotels;
+export default rotels;

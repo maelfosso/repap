@@ -51,7 +51,49 @@ class HotelsAPI {
       throw error;
     })
   }
+
+  static favorite(hotelId) {
+    return fetch(`http://localhost:4000/favorites`, {
+      method: 'POST',
+      body: JSON.stringify({ hotel: hotelId}),
+      headers: headers
+    })
+    .then(response => {
+      
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
   
+  static unfavorite(id) {
+    return fetch(`http://localhost:4000/favorites/${id}`, {
+      method: 'DELETE',
+      headers: headers
+    })
+    .then(response => {
+      
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
+
+  static favorites() {
+    return fetch(`http://localhost:4000/favorites/`, {
+      method: 'GET',
+      headers: headers
+    })
+    .then(response => {
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
+
 }
 
 export default HotelsAPI;
