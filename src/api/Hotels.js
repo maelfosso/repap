@@ -80,6 +80,20 @@ class HotelsAPI {
       throw error;
     })
   }
+
+  static favorites() {
+    return fetch(`http://localhost:4000/favorites/`, {
+      method: 'GET',
+      headers: headers
+    })
+    .then(response => {
+      return handleTokenErrors(response); 
+    })
+    .catch(error => {
+      throw error;
+    })
+  }
+
 }
 
 export default HotelsAPI;

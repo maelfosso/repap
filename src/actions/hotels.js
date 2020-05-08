@@ -50,7 +50,7 @@ export const waitABit = () => {
   }
 }
 
-export const list = () => {
+export const all = () => {
   return async (dispatch) => {
     dispatch(waitABit());
     
@@ -112,6 +112,23 @@ export const unfavorite = (id) => {
       dispatch({
         type: HOTEL_FAVORITE_DELETED,
         deleted: responseJson
+      });
+      
+    });
+  }
+}
+
+export const favorites = () => {
+  return async (dispatch) => {
+    dispatch(waitABit());
+    
+    HotelsAPI.favorites()
+    .then(response => response.json())
+    .then(responseJson => {
+      
+      dispatch({
+        type: HOTEL_LIST,
+        hotels: responseJson
       });
       
     });

@@ -6,7 +6,7 @@ import {
   withRouter
 } from "react-router-dom";
 
-import { list, waitABit } from '../actions/hotels';
+import { all, waitABit, favorites } from '../actions/hotels';
 
 const { Text } = Typography;
 
@@ -17,8 +17,27 @@ class HotelList extends React.Component {
   }
 
   componentDidMount = () => {
-    const { list } = this.props;
-    list();
+    const { all, favorites, location } = this.props;
+    
+    if (location.pathname === '/hotels') {
+      all();
+    } else if (location.pathname === '/favorites') {
+      favorites();
+    } 
+  }
+
+  componentWillReceiveProps(nextProps){
+
+    if (nextProps.location.pathname !== this.props.location.pathname) {
+      const { all, favorites, location } = nextProps;
+
+      if (location.pathname === '/hotels') {
+        all();
+      } else if (location.pathname === '/favorites') {
+        favorites();
+      }
+    }
+
   }
 
   _goToHotel = (id) => {
@@ -36,7 +55,7 @@ class HotelList extends React.Component {
         <Col flex="auto">
           <Row>
             <Text strong>{item.name}</Text> 
-            <Text>&nbsp;<HeartTwoTone twoToneColor="#eb2f96" hidden={item.favorite} /></Text>
+            <Text>&nbsp;<HeartTwoTone twoToneColor="#eb2f96" hidden={!item.favorite} /></Text>
           </Row>
           <Row justify="space-between">
             <Col><Rate value={+item.rating} allowHalf={true} disabled={true}/></Col>
@@ -50,28 +69,31 @@ class HotelList extends React.Component {
   }
 
   render = () => {
-    const { hotels, waitABit } = this.props;
+    const { hotels, waitABit, timestamp } = this.props;
     
     if (waitABit) {
       return <Spin />
     }
     
-    return <div className="HotelList">
-      <List 
-        itemLayout="horizontal"
-        dataSource={hotels}
-        renderItem={this._renderItem}
-        pagination={{
-          onChange: page => {}
-        }}
-      />
-    </div> 
+    return (
+      <div className="HotelList">
+        <List 
+          itemLayout="horizontal"
+          dataSource={hotels}
+          renderItem={this._renderItem}
+          pagination={{
+            onChange: page => {}
+          }}
+        />
+      </div>
+    );
   }
 
 }
 
 const mapDispatchToProps = dispatch => ({
-  list: () => dispatch(list()),
+  all: () => dispatch(all()),
+  favorites: () => dispatch(favorites()),
   waitABitFunc: () => dispatch(waitABit())
 });
 

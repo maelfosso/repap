@@ -102,13 +102,25 @@ class RMap extends React.Component {
     return (
       <div>
         <div className="RMap">
-          <Col xs={24} md={8} className="search">
+          <Col xs={24} md={12} className="search">
             <Switch>
+              {/* <Route exact path="/favorites" component={props => <HotelList {...props} timestamp={new Date().toString()} />} /> */}
+              {/* <Route exact path='/favorites' component={ (props) => (
+                <HotelList timestamp={new Date().toString()} {...props} />
+              )}/>
+              <Route exact path='/hotels' component={ (props) => (
+                <HotelList timestamp={new Date().toString()} {...props} />
+              )}/> */}
+              {/* <Route exact path="/hotels" component={props => <HotelList {...props} />} />
+              <Route exact path="/favorites" component={props => <HotelList {...props} />} /> */}
+              <Route exact path="/favorites">
+                <HotelList /> 
+              </Route>
               <Route exact path="/hotels">
                 <HotelList /> 
               </Route>
               <Route exact path="/hotels/:hotelId">
-                <HotelDetails onCurrentHotelPosition={this.onCurrentHotelPosition}/>
+                <HotelDetails />
               </Route>
               <Route exact path="/add">
                 <AddHotel latlngNewHotel={this.state.latlngNewHotel}/>
