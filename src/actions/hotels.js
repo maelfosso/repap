@@ -6,6 +6,20 @@ import {
 import HotelsAPI from '../api/Hotels';
 
 
+export const addPending = () => ({
+  type: HOTEL_ADD_PENDING,
+});
+
+export const addSuccess = hotel => ({
+  type: HOTEL_ADD_SUCCESS,
+  hotel,
+});
+
+export const addFailed = errors => ({
+  type: HOTEL_ADD_FAILED,
+  errors,
+});
+
 export const add = hotel => async dispatch => {
   dispatch(addPending());
 
@@ -21,20 +35,6 @@ export const add = hotel => async dispatch => {
       }
     });
 };
-
-export const addPending = () => ({
-  type: HOTEL_ADD_PENDING,
-});
-
-export const addSuccess = hotel => ({
-  type: HOTEL_ADD_SUCCESS,
-  hotel,
-});
-
-export const addFailed = errors => ({
-  type: HOTEL_ADD_FAILED,
-  errors,
-});
 
 export const waitABit = () => ({
   type: WAIT_A_BIT,

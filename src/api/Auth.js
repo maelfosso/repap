@@ -22,7 +22,7 @@ class AuthApi {
       });
   }
 
-  static register(name, email, phone, password, password_confirmation) {
+  static register(name, email, phone, password, passwordConfirmation) {
     return fetch('http://localhost:4000/auth/registration', {
       method: 'POST',
       body: JSON.stringify({
@@ -30,7 +30,7 @@ class AuthApi {
         email,
         phone,
         password,
-        password_confirmation,
+        password_confirmation: passwordConfirmation,
       }),
       headers,
     })
