@@ -2,68 +2,57 @@
 import { handleTokenErrors } from './Helpers';
 
 
-let headers = {
+const headers = {
   Accept: 'application/json',
-  'Content-Type': 'application/json'
-}
+  'Content-Type': 'application/json',
+};
 class AuthApi {
   static login(username, password) {
-
-    return fetch(`http://localhost:4000/auth/login`, {
+    return fetch('http://localhost:4000/auth/login', {
       method: 'POST',
       body: JSON.stringify({
-        username, 
-        password
+        username,
+        password,
       }),
-      headers: headers
+      headers,
     })
-    .then(response => {
-
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 
   static register(name, email, phone, password, password_confirmation) {
-
-    return fetch(`http://localhost:4000/auth/registration`, {
+    return fetch('http://localhost:4000/auth/registration', {
       method: 'POST',
       body: JSON.stringify({
         name,
         email,
         phone,
         password,
-        password_confirmation
+        password_confirmation,
       }),
-      headers: headers
+      headers,
     })
-    .then(response => {
-
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 
   static check(token) {
-
-    return fetch(`http://localhost:4000/auth/auto_login`, {
+    return fetch('http://localhost:4000/auth/auto_login', {
       method: 'GET',
       // body: JSON.stringify({}),
       headers: {
         ...headers,
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .then(response => {
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 }
 

@@ -19,8 +19,8 @@ const initialState = {
   registrationErrors: [],
 
   isAuthenticated: false,
-  isChecking: false
-}
+  isChecking: false,
+};
 
 const auth = (state = initialState, action) => {
   let nextState;
@@ -31,30 +31,30 @@ const auth = (state = initialState, action) => {
         ...state,
         isLoginPending: true,
         isLoginSuccess: false,
-        isLoginFailed: false
+        isLoginFailed: false,
       };
 
       return nextState;
-    
+
     case LOGIN_FAILED:
       nextState = {
         ...state,
         isLoginPending: false,
         isLoginSuccess: false,
         isLoginFailed: true,
-        message: action.message
+        message: action.message,
       };
 
       return nextState;
 
-    case LOGIN_SUCCESS: 
+    case LOGIN_SUCCESS:
       nextState = {
         ...state,
 
         isLoginPending: false,
         isLoginFailed: false,
         isLoginSuccess: true,
-        isAuthenticated: true
+        isAuthenticated: true,
       };
 
       return nextState;
@@ -64,30 +64,30 @@ const auth = (state = initialState, action) => {
         ...state,
         isRegistrationPending: true,
         isRegistrationSuccess: false,
-        isRegistrationFailed: false
+        isRegistrationFailed: false,
       };
 
       return nextState;
-    
+
     case REGISTRATION_FAILED:
       nextState = {
         ...state,
         isRegistrationPending: false,
         isRegistrationSuccess: false,
         isRegistrationFailed: true,
-        registrationErrors: action.errors
+        registrationErrors: action.errors,
       };
 
       return nextState;
 
-    case REGISTRATION_SUCCESS: 
+    case REGISTRATION_SUCCESS:
       nextState = {
         ...state,
 
         isRegistrationPending: false,
         isRegistrationFailed: false,
         isRegistrationSuccess: true,
-        isAuthenticated: true
+        isAuthenticated: true,
       };
 
       return nextState;
@@ -96,7 +96,7 @@ const auth = (state = initialState, action) => {
       nextState = {
         ...state,
         isChecking: true,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
 
       return nextState;
@@ -105,17 +105,17 @@ const auth = (state = initialState, action) => {
       nextState = {
         ...state,
         isChecking: false,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
 
       return nextState;
 
-    case CHECK_TOKEN_SUCCESS: 
+    case CHECK_TOKEN_SUCCESS:
       nextState = {
         ...state,
 
         isChecking: false,
-        isAuthenticated: true
+        isAuthenticated: true,
       };
 
       return nextState;
@@ -123,6 +123,6 @@ const auth = (state = initialState, action) => {
     default:
       return { ...state };
   }
-}
+};
 
 export default auth;

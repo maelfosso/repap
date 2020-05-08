@@ -2,98 +2,79 @@
 import { handleTokenErrors } from './Helpers';
 
 
-let headers = {
+const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer ' + localStorage.token
-}
+  Authorization: `Bearer ${localStorage.token}`,
+};
 class HotelsAPI {
-
   static all() {
-    return fetch(`http://localhost:4000/hotels/`, {
+    return fetch('http://localhost:4000/hotels/', {
       method: 'GET',
-      headers: headers
+      headers,
     })
-    .then(response => {
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 
   static add(values) {
-
-    return fetch(`http://localhost:4000/hotels/`, {
+    return fetch('http://localhost:4000/hotels/', {
       method: 'POST',
       body: JSON.stringify(values),
-      headers: headers
+      headers,
     })
-    .then(response => {
-      
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 
   static get(id) {
     return fetch(`http://localhost:4000/hotels/${id}`, {
       method: 'GET',
-      headers: headers
+      headers,
     })
-    .then(response => {
-      
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 
   static favorite(hotelId) {
-    return fetch(`http://localhost:4000/favorites`, {
+    return fetch('http://localhost:4000/favorites', {
       method: 'POST',
-      body: JSON.stringify({ hotel: hotelId}),
-      headers: headers
+      body: JSON.stringify({ hotel: hotelId }),
+      headers,
     })
-    .then(response => {
-      
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
-  
+
   static unfavorite(id) {
     return fetch(`http://localhost:4000/favorites/${id}`, {
       method: 'DELETE',
-      headers: headers
+      headers,
     })
-    .then(response => {
-      
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
 
   static favorites() {
-    return fetch(`http://localhost:4000/favorites/`, {
+    return fetch('http://localhost:4000/favorites/', {
       method: 'GET',
-      headers: headers
+      headers,
     })
-    .then(response => {
-      return handleTokenErrors(response); 
-    })
-    .catch(error => {
-      throw error;
-    })
+      .then(response => handleTokenErrors(response))
+      .catch(error => {
+        throw error;
+      });
   }
-
 }
 
 export default HotelsAPI;

@@ -4,7 +4,7 @@ import hotelsReducer from './hotels';
 
 const rootReducer = combineReducers({
   authReducer,
-  hotelsReducer
+  hotelsReducer,
 });
 
 export default rootReducer;

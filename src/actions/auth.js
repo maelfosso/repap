@@ -5,11 +5,23 @@ import {
 } from '../actionTypes';
 import AuthApi from '../api/Auth';
 
-export const login = (username, password) => {
-  return async (dispatch) => {
-    dispatch(loginPending());
+export const loginPending = () => ({
+  type: LOGIN_PENDING,
+});
 
-    AuthApi.login(username, password)
+export const loginSuccess = () => ({
+  type: LOGIN_SUCCESS,
+});
+
+export const loginFailed = message => ({
+  type: LOGIN_FAILED,
+  message,
+});
+
+export const login = (username, password) => async dispatch => {
+  dispatch(loginPending());
+
+  AuthApi.login(username, password)
     .then(response => response.json())
     .then(responseJson => {
       const { failure } = responseJson;
@@ -18,113 +30,76 @@ export const login = (username, password) => {
       } else {
         const { jwt, user } = responseJson;
 
-        localStorage.setItem("token", jwt);
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem('token', jwt);
+        localStorage.setItem('user', JSON.stringify(user));
 
         dispatch(loginSuccess());
       }
     });
-  }
-}
+};
 
-export const loginPending = () => {
-  return {
-    type: LOGIN_PENDING
-  }
-}
+export const registrationPending = () => ({
+  type: REGISTRATION_PENDING,
+});
 
-export const loginSuccess = () => {
-  return {
-    type: LOGIN_SUCCESS
-  }
-}
+export const registrationSuccess = () => ({
+  type: REGISTRATION_SUCCESS,
+});
 
-export const loginFailed = (message) => {
-  return {
-    type: LOGIN_FAILED,
-    message
-  }
-}
+export const registrationFailed = errors => ({
+  type: REGISTRATION_FAILED,
+  errors,
+});
 
-export const registration = (name, email, phone, password, password_confirmation) => {
-  return async (dispatch) => {
-    dispatch(registrationPending());
+export const registration = (name, email,
+  phone, password,
+  passwordConfirmation) => async dispatch => {
+  dispatch(registrationPending());
 
-    AuthApi.register(name, email, phone, password, password_confirmation)
+  AuthApi.register(name, email, phone, password, passwordConfirmation)
     .then(response => response.json())
     .then(responseJson => {
-
       if (responseJson.errors) {
         const { errors } = responseJson;
         dispatch(registrationFailed(errors));
-      } else {        
+      } else {
         const { jwt, user } = responseJson;
-        
-        localStorage.setItem("token", jwt);
-        localStorage.setItem("user", JSON.stringify(user));
+
+        localStorage.setItem('token', jwt);
+        localStorage.setItem('user', JSON.stringify(user));
 
         dispatch(registrationSuccess());
       }
     });
-  }
-}
+};
 
-export const registrationPending = () => {
-  return {
-    type: REGISTRATION_PENDING
-  }
-}
+export const checkTokenPending = () => ({
+  type: CHECK_TOKEN_PENDING,
+});
 
-export const registrationSuccess = () => {
-  return {
-    type: REGISTRATION_SUCCESS
-  }
-}
+export const checkTokenSuccess = () => ({
+  type: CHECK_TOKEN_SUCCESS,
+});
 
-export const registrationFailed = (errors) => {
-  return {
-    type: REGISTRATION_FAILED,
-    errors
-  }
-}
+export const checkTokenFailed = errors => ({
+  type: CHECK_TOKEN_FAILED,
+  errors,
+});
 
-export const checkToken = (token) => {
-  return async (dispatch) => {
-    dispatch(checkTokenPending());
-    
-    AuthApi.check(token)
+export const checkToken = token => async dispatch => {
+  dispatch(checkTokenPending());
+
+  AuthApi.check(token)
     .then(response => response.json())
     .then(responseJson => {
-
       if (responseJson.errors) {
         const { errors } = responseJson;
         dispatch(checkTokenFailed(errors));
       } else {
-        
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(responseJson));
-        
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(responseJson));
+
         dispatch(checkTokenSuccess());
       }
     });
-  }
-}
-
-export const checkTokenPending = () => {
-  return {
-    type: CHECK_TOKEN_PENDING
-  }
-}
-
-export const checkTokenSuccess = () => {
-  return {
-    type: CHECK_TOKEN_SUCCESS
-  }
-}
-
-export const checkTokenFailed = (errors) => {
-  return {
-    type: CHECK_TOKEN_FAILED,
-    errors
-  }
-}
+};

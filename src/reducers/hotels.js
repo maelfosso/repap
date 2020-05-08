@@ -1,6 +1,6 @@
 import {
-  HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING, 
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED
+  HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING,
+  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED,
 } from '../actionTypes';
 
 const initialState = {
@@ -15,7 +15,7 @@ const initialState = {
 
   waitABit: false,
   hotels: [],
-  hotel: null
+  hotel: null,
 };
 
 const rotels = (state = initialState, action) => {
@@ -30,8 +30,8 @@ const rotels = (state = initialState, action) => {
       nextState = {
         ...state,
 
-        isAddPending: true
-      }
+        isAddPending: true,
+      };
 
       return nextState;
 
@@ -41,8 +41,8 @@ const rotels = (state = initialState, action) => {
 
         addedHotel: action.hotel,
         isAdded: true,
-        isAddPending: false
-      }
+        isAddPending: false,
+      };
 
       return nextState;
 
@@ -52,8 +52,8 @@ const rotels = (state = initialState, action) => {
 
         isAddPending: false,
         isAddedError: true,
-        addingErrors: action.errors
-      }
+        addingErrors: action.errors,
+      };
 
       return nextState;
 
@@ -63,15 +63,15 @@ const rotels = (state = initialState, action) => {
 
         isAddingProcessOver: true,
         waitABit: false,
-      }
+      };
       return nextState;
 
     case WAIT_A_BIT:
       nextState = {
         ...state,
 
-        waitABit: true
-      }
+        waitABit: true,
+      };
 
       return nextState;
 
@@ -80,22 +80,22 @@ const rotels = (state = initialState, action) => {
         ...state,
 
         waitABit: false,
-        hotels: action.hotels
-      }
-      
+        hotels: action.hotels,
+      };
+
       return nextState;
 
     case HOTEL_DETAIL:
-      
+
       nextState = {
         ...state,
 
         waitABit: false,
-        hotel: action.hotel
-      }
+        hotel: action.hotel,
+      };
 
       return nextState;
-    
+
     case HOTEL_FAVORITE_CREATED:
       const fhotel = state.hotel;
       fhotel.favorite = action.favorite.id;
@@ -104,28 +104,28 @@ const rotels = (state = initialState, action) => {
         ...state,
 
         waitABit: false,
-        hotel: fhotel
-      }
+        hotel: fhotel,
+      };
 
       return nextState;
 
     case HOTEL_FAVORITE_DELETED:
       const dhotel = state.hotel;
       dhotel.favorite = action.deleted ? false : dhotel.favorite;
-      
+
       nextState = {
         ...state,
 
         waitABit: false,
-        hotel: dhotel
-      }
+        hotel: dhotel,
+      };
 
       return nextState;
-    
+
     default:
 
       return state;
   }
-}
+};
 
 export default rotels;

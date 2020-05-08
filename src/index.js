@@ -10,7 +10,7 @@ import rootReducer from './reducers';
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk)
+  applyMiddleware(thunk),
 );
 ReactDOM.render(
   <Provider store={store}>
@@ -18,4 +18,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
-
