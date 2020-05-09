@@ -1,7 +1,7 @@
 # REPAP
 
 My final project at [Microverse](https://microverse.org).
-This is just the **Front-END**. The **Back-end** is available at [https://github.com/maelfosso/repap-api.git](https://github.com/maelfosso/repap.git)
+This is just the **Front-END**. The **Back-end** is available at [https://github.com/maelfosso/repap-api.git](https://github.com/maelfosso/repap-api.git)
 
 ## Description
 This project aims to show whether or not I master all the courses learn.
