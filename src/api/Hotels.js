@@ -11,7 +11,7 @@ class HotelsAPI {
   static photoJoin(id) {
     return `${config.API_URL}/hotels/${id}/photos`;
   }
-  
+
   static photoUrl(url) {
     return `${config.API_URL}/${url}`;
   }

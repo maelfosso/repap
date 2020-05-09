@@ -140,13 +140,17 @@ class RMap extends React.Component {
   }
 }
 
+RMap.defaultProps = {
+  hotel: undefined,
+};
+
 RMap.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.objectOf(PropTypes.object).isRequired,
+  hotel: PropTypes.objectOf(PropTypes.object),
   hotels: PropTypes.instanceOf(Array).isRequired,
 
-  location: PropTypes.objectOf(PropTypes.object).isRequired,
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

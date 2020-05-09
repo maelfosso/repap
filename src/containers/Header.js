@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   withRouter,
+
+  Link,
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -14,9 +16,7 @@ import {
   UserOutlined, LockOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import {
-  Link,
-} from 'react-router-dom';
+
 
 import { login, registration, logout } from '../actions/auth';
 
@@ -152,7 +152,6 @@ class Header extends React.Component {
     const {
       isLoginPending, isLoginFailed, isLoginSuccess,
       isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors,
-      isAuthenticated,
     } = this.props;
     const { signUpModalVisible, signInModalVisible } = this.state;
 
@@ -197,7 +196,6 @@ class Header extends React.Component {
     const { logout, history } = this.props;
     history.push('/');
     logout();
-
   };
 
   renderCurrentUser() {
@@ -211,9 +209,9 @@ class Header extends React.Component {
 
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
-      return;
+      return <span />;
     }
-    
+
     return <Dropdown overlay={menu}><span>{user.name}</span></Dropdown>;
   }
 
@@ -462,7 +460,10 @@ Header.propTypes = {
 
   isAuthenticated: PropTypes.bool.isRequired,
 
+  history: PropTypes.object.isRequired,
+
   login: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
   registration: PropTypes.func.isRequired,
 };
 

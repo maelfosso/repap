@@ -124,8 +124,8 @@ const auth = (state = initialState, action) => {
       nextState = {
         ...state,
 
-        isAuthenticated: false
-      }
+        isAuthenticated: false,
+      };
       return nextState;
 
     default:

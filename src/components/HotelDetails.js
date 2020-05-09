@@ -101,8 +101,8 @@ HotelDetails.propTypes = {
   favorite: PropTypes.func.isRequired,
   unfavorite: PropTypes.func.isRequired,
 
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
-  match: PropTypes.objectOf(PropTypes.object).isRequired,
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
