@@ -1,4 +1,4 @@
-// import Config from 'react-native-config';
+import config from '../config';
 import { handleTokenErrors } from './Helpers';
 
 
@@ -8,8 +8,16 @@ const headers = {
   Authorization: `Bearer ${localStorage.token}`,
 };
 class HotelsAPI {
+  static photoJoin(id) {
+    return `${config.API_URL}/hotels/${id}/photos`;
+  }
+  
+  static photoUrl(url) {
+    return `${config.API_URL}/${url}`;
+  }
+
   static all() {
-    return fetch('http://localhost:4000/hotels/', {
+    return fetch(`${config.API_URL}/hotels/`, {
       method: 'GET',
       headers,
     })
@@ -20,7 +28,7 @@ class HotelsAPI {
   }
 
   static add(values) {
-    return fetch('http://localhost:4000/hotels/', {
+    return fetch(`${config.API_URL}/hotels/`, {
       method: 'POST',
       body: JSON.stringify(values),
       headers,
@@ -32,7 +40,7 @@ class HotelsAPI {
   }
 
   static get(id) {
-    return fetch(`http://localhost:4000/hotels/${id}`, {
+    return fetch(`${config.API_URL}/hotels/${id}`, {
       method: 'GET',
       headers,
     })
@@ -43,7 +51,7 @@ class HotelsAPI {
   }
 
   static favorite(hotelId) {
-    return fetch('http://localhost:4000/favorites', {
+    return fetch(`${config.API_URL}/favorites`, {
       method: 'POST',
       body: JSON.stringify({ hotel: hotelId }),
       headers,
@@ -55,7 +63,7 @@ class HotelsAPI {
   }
 
   static unfavorite(id) {
-    return fetch(`http://localhost:4000/favorites/${id}`, {
+    return fetch(`${config.API_URL}/favorites/${id}`, {
       method: 'DELETE',
       headers,
     })
@@ -66,7 +74,7 @@ class HotelsAPI {
   }
 
   static favorites() {
-    return fetch('http://localhost:4000/favorites/', {
+    return fetch(`${config.API_URL}/favorites/`, {
       method: 'GET',
       headers,
     })

@@ -8,6 +8,7 @@ import { EnvironmentOutlined, PhoneOutlined, ArrowLeftOutlined } from '@ant-desi
 import {
   Carousel, Typography, Spin, Row, Col, Button, Empty,
 } from 'antd';
+import HotelsAPI from '../api/Hotels';
 
 import { details, favorite, unfavorite } from '../actions/hotels';
 
@@ -50,7 +51,7 @@ class HotelDetails extends React.Component {
           { hotel.photos.length > 0
             ? (
               <Carousel>
-                { hotel.photos.map(photo => <div key={photo.id}><img alt="Hotel photos" src={`http://localhost:4000/${photo.url}`} /></div>) }
+                { hotel.photos.map(photo => <div key={photo.id}><img alt="Hotel photos" src={HotelsAPI.photoUrl(photo.url)} /></div>) }
               </Carousel>
             ) : <Empty description={false} /> }
           <Title>{hotel.name}</Title>
