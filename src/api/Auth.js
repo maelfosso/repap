@@ -1,4 +1,5 @@
 import { handleTokenErrors } from './Helpers';
+import config from '../config';
 
 const headers = {
   Accept: 'application/json',
@@ -6,7 +7,7 @@ const headers = {
 };
 class AuthApi {
   static login(username, password) {
-    return fetch('http://localhost:4000/auth/login', {
+    return fetch(`${config.API_URL}/auth/login`, {
       method: 'POST',
       body: JSON.stringify({
         username,
@@ -21,7 +22,7 @@ class AuthApi {
   }
 
   static register(name, email, phone, password, passwordConfirmation) {
-    return fetch('http://localhost:4000/auth/registration', {
+    return fetch(`${config.API_URL}/auth/registration`, {
       method: 'POST',
       body: JSON.stringify({
         name,
@@ -39,9 +40,8 @@ class AuthApi {
   }
 
   static check(token) {
-    return fetch('http://localhost:4000/auth/auto_login', {
+    return fetch(`${config.API_URL}/auth/auto_login`, {
       method: 'GET',
-      // body: JSON.stringify({}),
       headers: {
         ...headers,
         Authorization: `Bearer ${token}`,

@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { add } from '../actions/hotels';
+import HotelsAPI from '../api/Hotels';
 
 const { Step } = Steps;
 
@@ -73,7 +74,7 @@ class AddHotel extends React.Component {
     const { uploadedFileList } = this.state;
 
     const current = !isAdded ? 0 : 1;
-    const joinPhotoUrl = isAdded ? `http://localhost:4000/hotels/${addedHotel.id}/photos` : '';
+    const joinPhotoUrl = isAdded ? HotelsAPI.photoJoin(addedHotel.id) : '';
 
     const uploadProps = {
       name: 'files',
