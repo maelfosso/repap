@@ -1,5 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  withRouter,
+
+  Link,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
@@ -11,11 +16,9 @@ import {
   UserOutlined, LockOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import {
-  Link,
-} from 'react-router-dom';
 
-import { login, registration } from '../actions/auth';
+
+import { login, registration, logout } from '../actions/auth';
 
 const key = 'auth';
 
@@ -25,8 +28,6 @@ class Header extends React.Component {
   registrationForm = React.createRef();
 
   loginForm = React.createRef();
-
-  currentUser = {};
 
   constructor(props) {
     super(props);
@@ -151,7 +152,6 @@ class Header extends React.Component {
     const {
       isLoginPending, isLoginFailed, isLoginSuccess,
       isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors,
-      isAuthenticated,
     } = this.props;
     const { signUpModalVisible, signInModalVisible } = this.state;
 
@@ -180,11 +180,6 @@ class Header extends React.Component {
       }
       this.registrationErrors = registrationErrors;
     }
-
-    if (isAuthenticated) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      this.currentUser = user;
-    }
   }
 
   toggleModal = m => {
@@ -197,7 +192,11 @@ class Header extends React.Component {
     }
   }
 
-  logout = () => false;
+  logout = () => {
+    const { logout, history } = this.props;
+    history.push('/');
+    logout();
+  };
 
   renderCurrentUser() {
     const menu = (
@@ -209,9 +208,11 @@ class Header extends React.Component {
     );
 
     const user = JSON.parse(localStorage.getItem('user'));
-    this.currentUser = user;
+    if (!user) {
+      return <span />;
+    }
 
-    return <Dropdown overlay={menu}><span>{this.currentUser.name}</span></Dropdown>;
+    return <Dropdown overlay={menu}><span>{user.name}</span></Dropdown>;
   }
 
   render() {
@@ -459,11 +460,15 @@ Header.propTypes = {
 
   isAuthenticated: PropTypes.bool.isRequired,
 
+  history: PropTypes.object.isRequired,
+
   login: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
   registration: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout()),
   login: (username, password) => dispatch(login(username, password)),
   registration: (name, email, phone,
     password, passwordConfirmation) => dispatch(registration(name, email, phone,
@@ -483,4 +488,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.authReducer.isAuthenticated,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

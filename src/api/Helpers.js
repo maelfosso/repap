@@ -10,9 +10,7 @@ export const signIn = (username, password) => fetch('http://localhost:4000/auth/
   }),
 }).then(response => response.json());
 
-export const handleTokenErrors = response => {
-  return response;
-};
+export const handleTokenErrors = response => response;
 
 export const generalError = response => {
   if (response === 'Type Error: Network request failed') {
