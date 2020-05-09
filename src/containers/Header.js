@@ -78,7 +78,7 @@ class Header extends React.Component {
     }
 
     this.setState({
-      signInModalVisible,
+      signInModalVisible: !signInModalVisible,
       signUpModalVisible: false,
     });
   }
