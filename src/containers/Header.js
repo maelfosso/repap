@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  withRouter,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
@@ -25,8 +28,6 @@ class Header extends React.Component {
   registrationForm = React.createRef();
 
   loginForm = React.createRef();
-
-  currentUser = {};
 
   constructor(props) {
     super(props);
@@ -180,11 +181,6 @@ class Header extends React.Component {
       }
       this.registrationErrors = registrationErrors;
     }
-
-    if (isAuthenticated) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      this.currentUser = user;
-    }
   }
 
   toggleModal = m => {
@@ -198,8 +194,10 @@ class Header extends React.Component {
   }
 
   logout = () => {
-    const { logout } = this.props;
+    const { logout, history } = this.props;
+    history.push('/');
     logout();
+
   };
 
   renderCurrentUser() {
@@ -212,9 +210,11 @@ class Header extends React.Component {
     );
 
     const user = JSON.parse(localStorage.getItem('user'));
-    this.currentUser = user;
-
-    return <Dropdown overlay={menu}><span>{this.currentUser.name}</span></Dropdown>;
+    if (!user) {
+      return;
+    }
+    
+    return <Dropdown overlay={menu}><span>{user.name}</span></Dropdown>;
   }
 
   render() {
@@ -487,4 +487,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.authReducer.isAuthenticated,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
