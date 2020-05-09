@@ -5,7 +5,7 @@ import {
   REGISTRATION_PENDING,
   REGISTRATION_FAILED,
   REGISTRATION_SUCCESS,
-  CHECK_TOKEN_PENDING, CHECK_TOKEN_SUCCESS, CHECK_TOKEN_FAILED,
+  CHECK_TOKEN_PENDING, CHECK_TOKEN_SUCCESS, CHECK_TOKEN_FAILED, LOGOUT,
 } from '../actionTypes';
 
 const initialState = {
@@ -118,6 +118,14 @@ const auth = (state = initialState, action) => {
         isAuthenticated: true,
       };
 
+      return nextState;
+
+    case LOGOUT:
+      nextState = {
+        ...state,
+
+        isAuthenticated: false
+      }
       return nextState;
 
     default:

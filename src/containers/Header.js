@@ -15,7 +15,7 @@ import {
   Link,
 } from 'react-router-dom';
 
-import { login, registration } from '../actions/auth';
+import { login, registration, logout } from '../actions/auth';
 
 const key = 'auth';
 
@@ -197,7 +197,10 @@ class Header extends React.Component {
     }
   }
 
-  logout = () => false;
+  logout = () => {
+    const { logout } = this.props;
+    logout();
+  };
 
   renderCurrentUser() {
     const menu = (
@@ -464,6 +467,7 @@ Header.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout()),
   login: (username, password) => dispatch(login(username, password)),
   registration: (name, email, phone,
     password, passwordConfirmation) => dispatch(registration(name, email, phone,

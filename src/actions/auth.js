@@ -2,6 +2,7 @@ import {
   LOGIN_PENDING, LOGIN_SUCCESS, LOGIN_FAILED,
   REGISTRATION_PENDING, REGISTRATION_SUCCESS, REGISTRATION_FAILED,
   CHECK_TOKEN_PENDING, CHECK_TOKEN_SUCCESS, CHECK_TOKEN_FAILED,
+  LOGOUT
 } from '../actionTypes';
 import AuthApi from '../api/Auth';
 
@@ -103,3 +104,13 @@ export const checkToken = token => async dispatch => {
       }
     });
 };
+
+export const logout = () => {
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  return {
+    type: LOGOUT
+  }
+}
