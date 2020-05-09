@@ -1,6 +1,8 @@
 import {
-  HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS, HOTEL_ADD_PENDING,
-  HOTEL_ADD_PROCESS_OVER, WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL, HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED,
+  HOTEL_ADD, HOTEL_ADD_FAILED, HOTEL_ADD_SUCCESS,
+  HOTEL_ADD_PENDING, HOTEL_ADD_PROCESS_OVER,
+  WAIT_A_BIT, HOTEL_LIST, HOTEL_DETAIL,
+  HOTEL_FAVORITE_CREATED, HOTEL_FAVORITE_DELETED,
 } from '../actionTypes';
 
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
 
 const rotels = (state = initialState, action) => {
   let nextState;
+  const { hotel } = state;
 
   switch (action.type) {
     case HOTEL_ADD:
@@ -97,27 +100,25 @@ const rotels = (state = initialState, action) => {
       return nextState;
 
     case HOTEL_FAVORITE_CREATED:
-      const fhotel = state.hotel;
-      fhotel.favorite = action.favorite.id;
+      hotel.favorite = action.favorite.id;
 
       nextState = {
         ...state,
 
         waitABit: false,
-        hotel: fhotel,
+        hotel,
       };
 
       return nextState;
 
     case HOTEL_FAVORITE_DELETED:
-      const dhotel = state.hotel;
-      dhotel.favorite = action.deleted ? false : dhotel.favorite;
+      hotel.favorite = action.deleted ? false : hotel.favorite;
 
       nextState = {
         ...state,
 
         waitABit: false,
-        hotel: dhotel,
+        hotel,
       };
 
       return nextState;

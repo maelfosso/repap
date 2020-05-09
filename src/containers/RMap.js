@@ -3,17 +3,15 @@ import {
   Switch,
   Route,
   withRouter,
-  Redirect
-} from "react-router-dom";
+} from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { 
-  Input, Typography, Col, 
-  Form, InputNumber, Button, Alert, 
-  Upload, Steps, message 
+import {
+  Typography, Col,
 } from 'antd';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
-import { Map, Marker, Popup, TileLayer, ZoomControl } from "react-leaflet";
-import { control } from "leaflet";
+import {
+  Map, Marker, Popup, TileLayer, ZoomControl,
+} from 'react-leaflet';
 import { Fab } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import HotelList from '../components/HotelList';
@@ -27,20 +25,23 @@ const { Text } = Typography;
 const center = [3.844119, 11.501346];
 
 class RMap extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    isCreatingHotel: false,
-    uploadedFileList: []
-  };
-
-  latlngNewHotel = null;
-
-  onHotelCreationClick = () => {
-    this.props.history.push("/add");
+    this.state = {
+      latlngNewHotel: null,
+    };
   }
 
+  onHotelCreationClick = () => {
+    const { history } = this.props;
+    history.push('/add');
+  }
+
+  /* eslint-disable consistent-return */
   renderMarkers = () => {
-    const { pathname } = this.props.location;
+    const { location } = this.props;
+    const { pathname } = location;
     const { waitABit, hotel, hotels } = this.props;
     const { latlngNewHotel } = this.state;
 
@@ -54,81 +55,67 @@ class RMap extends React.Component {
           <Popup>The center is here!</Popup>
         </Marker>
       );
-    } else if (pathname === '/add') {
+    } if (pathname === '/add') {
       return latlngNewHotel ? (
-        <Marker position={latlngNewHotel.split(", ")}>
+        <Marker position={latlngNewHotel.split(', ')}>
           <Popup>Hotel position</Popup>
         </Marker>
       ) : null;
-    } else if (pathname.startsWith('/hotels/')) {
+    } if (pathname.startsWith('/hotels/')) {
       if (!hotel) return;
 
       return (
-        <Marker position={hotel.latlng.split(", ")}>
+        <Marker position={hotel.latlng.split(', ')}>
           <Popup><Text strong>{hotel.name}</Text></Popup>
         </Marker>
-      )
-    } else {
-      return hotels.map((hotel, ix) => (
-        <Marker key={ix} position={hotel.latlng.split(", ")}>
-          <Popup><Text strong>{hotel.name}</Text></Popup>
-        </Marker>
-      ));
+      );
     }
-  }
-
-  onCurrentHotelPosition = (position) => {    
-    this.setState({
-      markers: [position]
-    });
+    return hotels.map(hotel => (
+      <Marker key={hotel.id} position={hotel.latlng.split(', ')}>
+        <Popup><Text strong>{hotel.name}</Text></Popup>
+      </Marker>
+    ));
   }
 
   onMapClick = values => {
     const { latlng } = values;
-    const { pathname } = this.props.location;
-    
+    const { location } = this.props;
+    const { pathname } = location;
+
     if (pathname === '/add') {
       const { lat, lng } = latlng;
-      
-      this.latlngNewHotel = `${lat}, ${lng}`;
-      
+
+
       this.setState({
-        latlngNewHotel: this.latlngNewHotel
+        latlngNewHotel: `${lat}, ${lng}`,
       });
     }
   }
 
   render() {
+    const { latlngNewHotel } = this.state;
+
     return (
       <div>
         <div className="RMap">
           <Col xs={24} md={12} className="search">
             <Switch>
-              {/* <Route exact path="/favorites" component={props => <HotelList {...props} timestamp={new Date().toString()} />} /> */}
-              {/* <Route exact path='/favorites' component={ (props) => (
-                <HotelList timestamp={new Date().toString()} {...props} />
-              )}/>
-              <Route exact path='/hotels' component={ (props) => (
-                <HotelList timestamp={new Date().toString()} {...props} />
-              )}/> */}
-              {/* <Route exact path="/hotels" component={props => <HotelList {...props} />} />
-              <Route exact path="/favorites" component={props => <HotelList {...props} />} /> */}
               <Route exact path="/favorites">
-                <HotelList /> 
+                <HotelList />
               </Route>
               <Route exact path="/hotels">
-                <HotelList /> 
+                <HotelList />
               </Route>
               <Route exact path="/hotels/:hotelId">
                 <HotelDetails />
               </Route>
               <Route exact path="/add">
-                <AddHotel latlngNewHotel={this.state.latlngNewHotel}/>
+                <AddHotel latlngNewHotel={latlngNewHotel} />
               </Route>
             </Switch>
-          </Col>        
-          <Map 
-            center={center} 
+          </Col>
+          <Map
+            center={center}
             zoom={12}
             whenReady={this.onMapReady}
             onClick={this.onMapClick}
@@ -142,17 +129,25 @@ class RMap extends React.Component {
             { this.renderMarkers() }
           </Map>
           <Fab
-            icon={<span>+</span>} 
+            icon={<span>+</span>}
             mainButtonStyles={{ backgroundColor: '#e74c3c' }}
             onClick={this.onHotelCreationClick}
             event={null}
-            children={false}
-          ></Fab>
-        </div>          
+          />
+        </div>
       </div>
     );
   }
 }
+
+RMap.propTypes = {
+  waitABit: PropTypes.bool.isRequired,
+  hotel: PropTypes.objectOf(PropTypes.object).isRequired,
+  hotels: PropTypes.instanceOf(Array).isRequired,
+
+  location: PropTypes.objectOf(PropTypes.object).isRequired,
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
+};
 
 const mapStateToProps = state => ({
   waitABit: state.hotelsReducer.waitABit,

@@ -1,87 +1,91 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { 
-  message, Tooltip, Alert, Button, 
+import {
+  message, Tooltip, Alert, Button,
   Modal, Form, Input, Checkbox, Menu, Dropdown,
-  Row, Col
+  Row, Col,
 } from 'antd';
-import { 
-  UserOutlined, LockOutlined, 
-  QuestionCircleOutlined 
+import {
+  UserOutlined, LockOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
   Link,
-  Redirect,
-  useHistory,
-  useLocation
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import { login, registration } from '../actions/auth';
 
 const key = 'auth';
 
 class Header extends React.Component {
-  
   registrationErrors = [];
+
   registrationForm = React.createRef();
+
   loginForm = React.createRef();
 
   currentUser = {};
 
-  state = {
-    signInModalVisible: false,
-    signUpModalVisible: false
-  };
+  constructor(props) {
+    super(props);
 
-  formItemLayout = {
-    labelCol: {
-      xs: {
-        span: 24,
-      },
-      sm: {
-        span: 8,
-      },
-    },
-    wrapperCol: {
-      xs: {
-        span: 24,
-      },
-      sm: {
-        span: 16,
-      },
-    },
-  };
+    this.state = {
+      signInModalVisible: false,
+      signUpModalVisible: false,
+    };
 
-  tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
+    this.formItemLayout = {
+      labelCol: {
+        xs: {
+          span: 24,
+        },
+        sm: {
+          span: 8,
+        },
       },
-      sm: {
-        span: 16,
-        offset: 8,
+      wrapperCol: {
+        xs: {
+          span: 24,
+        },
+        sm: {
+          span: 16,
+        },
       },
-    },
-  };
+    };
 
-  openSignInModal = (e) => {
+    this.tailFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 16,
+          offset: 8,
+        },
+      },
+    };
+  }
+
+
+  openSignInModal = () => {
+    const { signInModalVisible } = this.state;
+
     if (this.loginForm.current) {
       this.loginForm.current.resetFields();
     }
 
     this.setState({
-      signInModalVisible: !this.state.signInModalVisible,
-      signUpModalVisible: false
+      signInModalVisible,
+      signUpModalVisible: false,
     });
   }
 
-  openSignUpModal = (e) => {
+  openSignUpModal = () => {
+    const { signUpModalVisible } = this.state;
+
     if (this.registrationForm.current) {
       this.registrationForm.current.resetFields();
       this.registrationErrors = [];
@@ -89,32 +93,34 @@ class Header extends React.Component {
 
     this.setState({
       signInModalVisible: false,
-      signUpModalVisible: !this.state.signUpModalVisible,
+      signUpModalVisible: !signUpModalVisible,
     });
   }
 
   onSignInFinish = values => {
     const { login } = this.props;
     const { username, password } = values;
-    
+
     login(username, password);
   }
 
   onSignUpFinish = values => {
     const { registration } = this.props;
-    const { name, email, phone, password, password_confirmation } = values;
-    
-    registration(name, email, phone, password, password_confirmation);
+    const {
+      name, email, phone, password, passwordConfirmation,
+    } = values;
+
+    registration(name, email, phone, password, passwordConfirmation);
   }
-  
+
   onLoginPending = () => {
-    message.loading({ content: 'Login in progress', key});
+    message.loading({ content: 'Login in progress', key });
   }
 
   onLoginSuccess = () => {
     message.success({ content: 'Login successful!', key });
     this.setState({
-      signInModalVisible: false
+      signInModalVisible: false,
     });
   }
 
@@ -123,29 +129,33 @@ class Header extends React.Component {
   }
 
   onRegistrationPending = () => {
-    message.loading({ content: 'Registration in progress', key});
+    message.loading({ content: 'Registration in progress', key });
   }
 
   onRegistrationSuccess = () => {
     message.success({ content: 'Registration successful!', key });
     this.setState({
-      signUpModalVisible: false
+      signUpModalVisible: false,
     });
     this.registrationForm.current.resetFields();
   }
 
-  onRegistrationFailed = (errors) => {
-    message.error({ content: 'Sorry registration failed!', key });
+  onRegistrationFailed = errors => {
+    message.error({
+      content: `Sorry registration failed!\n${errors}`,
+      key,
+    });
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-    const { 
+  componentDidUpdate = () => {
+    const {
       isLoginPending, isLoginFailed, isLoginSuccess,
       isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors,
-      isAuthenticated
+      isAuthenticated,
     } = this.props;
+    const { signUpModalVisible, signInModalVisible } = this.state;
 
-    if (this.state.signInModalVisible) {
+    if (signInModalVisible) {
       if (isLoginPending) {
         this.onLoginPending();
       }
@@ -158,7 +168,7 @@ class Header extends React.Component {
     }
 
 
-    if (this.state.signUpModalVisible) {
+    if (signUpModalVisible) {
       if (isRegistrationPending) {
         this.onRegistrationPending();
       }
@@ -172,22 +182,33 @@ class Header extends React.Component {
     }
 
     if (isAuthenticated) {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem('user'));
       this.currentUser = user;
     }
-
   }
+
+  toggleModal = m => {
+    if (m === 0) {
+      this.openSignUpModal();
+      this.openSignInModal();
+    } else {
+      this.openSignInModal();
+      this.openSignUpModal();
+    }
+  }
+
+  logout = () => false;
 
   renderCurrentUser() {
     const menu = (
       <Menu>
         <Menu.Item key="0">
-          <a onClick={() => console.log("Logout")}>Log out</a>
+          <Button type="link" onClick={this.logout}>Log out</Button>
         </Menu.Item>
       </Menu>
     );
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem('user'));
     this.currentUser = user;
 
     return <Dropdown overlay={menu}><span>{this.currentUser.name}</span></Dropdown>;
@@ -195,6 +216,7 @@ class Header extends React.Component {
 
   render() {
     const { isRegistrationFailed, registrationErrors, isAuthenticated } = this.props;
+    const { signUpModalVisible, signInModalVisible } = this.state;
 
     return (
       <header>
@@ -208,27 +230,32 @@ class Header extends React.Component {
           <Col span={20}>
             <Row justify="space-between">
               <Col>
-              { isAuthenticated ?
-                <ul>
-                  <li>
-                    <Link to="/hotels">All hotels</Link>
-                  </li>
-                  <li>
-                    <Link to="/favorites">Favorites</Link>
-                  </li>
-                </ul>
-                : null }
+                { isAuthenticated
+                  ? (
+                    <ul>
+                      <li>
+                        <Link to="/hotels">All hotels</Link>
+                      </li>
+                      <li>
+                        <Link to="/favorites">Favorites</Link>
+                      </li>
+                    </ul>
+                  )
+                  : null }
               </Col>
               <Col>
-                { isAuthenticated ?
-                  <div className="button">
-                    {this.renderCurrentUser()}
-                  </div> :
-                  <div className="button">
-                    <Button onClick={this.openSignInModal}>Login</Button>
-                    <Button onClick={this.openSignUpModal}>Registration</Button>
-                  </div>
-                }
+                { isAuthenticated
+                  ? (
+                    <div className="button">
+                      {this.renderCurrentUser()}
+                    </div>
+                  )
+                  : (
+                    <div className="button">
+                      <Button onClick={this.openSignInModal}>Login</Button>
+                      <Button onClick={this.openSignUpModal}>Registration</Button>
+                    </div>
+                  )}
               </Col>
             </Row>
           </Col>
@@ -237,10 +264,10 @@ class Header extends React.Component {
         <Modal
           title="Login"
           centered
-          visible={this.state.signInModalVisible}
+          visible={signInModalVisible}
           footer={null}
           onCancel={this.openSignInModal}
-        >          
+        >
           <Form
             name="sign_in"
             ref={this.loginForm}
@@ -269,26 +296,27 @@ class Header extends React.Component {
                 <Checkbox>Remember me</Checkbox>
               </Form.Item>
 
-              <a className="forgot" href="">
+              <Button type="link" className="forgot">
                 Forgot password
-              </a>
+              </Button>
             </Form.Item>
 
             <Form.Item>
               <Button type="primary" htmlType="submit" className="button">
                 Log in
               </Button>
-              Or <a onClick={() => {this.openSignInModal(); this.openSignUpModal();}}>Register now!</a>
+              Or
+              <Button type="link" onClick={() => this.toggleModal(1)}>Register now!</Button>
             </Form.Item>
           </Form>
         </Modal>
         <Modal
           title="Registration"
           centered
-          visible={this.state.signUpModalVisible}
+          visible={signUpModalVisible}
           footer={null}
           onCancel={this.openSignUpModal}
-        > 
+        >
           <Form
             {...this.formItemLayout}
             name="sign_up"
@@ -345,7 +373,7 @@ class Header extends React.Component {
                       return Promise.resolve();
                     }
 
-                    return Promise.reject('The two passwords that you entered do not match!');
+                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
                   },
                 }),
               ]}
@@ -355,14 +383,14 @@ class Header extends React.Component {
 
             <Form.Item
               name="name"
-              label={
+              label={(
                 <span>
                   Name&nbsp;
                   <Tooltip title="What do you want others to call you?">
                     <QuestionCircleOutlined />
                   </Tooltip>
                 </span>
-              }
+              )}
               rules={[
                 {
                   required: true,
@@ -390,35 +418,56 @@ class Header extends React.Component {
                 }}
               />
             </Form.Item>
-            
+
             <div>
-            { isRegistrationFailed && registrationErrors && registrationErrors.map(error => <Alert message={error} type="error" />) }
+              { isRegistrationFailed
+                && registrationErrors
+                && registrationErrors.map(error => <Alert key={error.length} message={error} type="error" />) }
             </div>
-            
+
             <Form.Item name="agreement" valuePropName="checked">
               <Checkbox>
-                I have read the <a href="">agreement</a>
+                I have read the
+                <Button type="link">agreement</Button>
               </Checkbox>
             </Form.Item>
-            
+
             <Form.Item>
               <Button type="primary" htmlType="submit" className="button">
                 Register
               </Button>
-              Or <a onClick={() => {this.openSignUpModal(); this.openSignInModal();}}>Login now!</a>
+              Or
+              <Button type="link" onClick={() => this.toggleModal(0)}>Login now!</Button>
             </Form.Item>
           </Form>
         </Modal>
-        
+
       </header>
     );
   }
-
 }
+
+Header.propTypes = {
+  isLoginFailed: PropTypes.bool.isRequired,
+  isLoginSuccess: PropTypes.bool.isRequired,
+  isLoginPending: PropTypes.bool.isRequired,
+
+  isRegistrationFailed: PropTypes.bool.isRequired,
+  isRegistrationSuccess: PropTypes.bool.isRequired,
+  isRegistrationPending: PropTypes.bool.isRequired,
+  registrationErrors: PropTypes.instanceOf(Array).isRequired,
+
+  isAuthenticated: PropTypes.bool.isRequired,
+
+  login: PropTypes.func.isRequired,
+  registration: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
   login: (username, password) => dispatch(login(username, password)),
-  registration: (name, email, phone, password, password_confirmation) => dispatch(registration(name, email, phone, password, password_confirmation))
+  registration: (name, email, phone,
+    password, passwordConfirmation) => dispatch(registration(name, email, phone,
+    password, passwordConfirmation)),
 });
 
 const mapStateToProps = state => ({

@@ -1,42 +1,36 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
-  withRouter
-} from "react-router-dom";
+  withRouter,
+} from 'react-router-dom';
 import { EnvironmentOutlined, PhoneOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { Carousel, Typography, Spin, Row, Col, Button, Empty } from 'antd';
+import {
+  Carousel, Typography, Spin, Row, Col, Button, Empty,
+} from 'antd';
 
 import { details, favorite, unfavorite } from '../actions/hotels';
 
 const { Title, Paragraph } = Typography;
 
 class HotelDetails extends React.Component {
-  state = {
-    hotel: undefined,
-    isLoading: true
-  }
-
   componentDidMount = () => {
-    let { hotelId } = this.props.match.params;
-    const { details } = this.props;
+    const { details, match } = this.props;
+    const { hotelId } = match.params;
 
     details(hotelId);
   }
 
-  renderPhotos = (photo) => {
-    return <div key={photo.id}></div>
-  }
-
-  _goBack = () => {
+  goBack = () => {
     const { history } = this.props;
     history.goBack();
   }
 
-  _toggleFavorite = () => {
+  toggleFavorite = () => {
     const { hotel, favorite, unfavorite } = this.props;
 
     if (hotel.favorite) {
-      unfavorite(hotel.favorite)
+      unfavorite(hotel.favorite);
     } else {
       favorite(hotel.id);
     }
@@ -44,27 +38,42 @@ class HotelDetails extends React.Component {
 
   render = () => {
     const { hotel, waitABit } = this.props;
-    
+
     if (waitABit || !hotel) {
-      return <Spin />
+      return <Spin />;
     }
-    
+
     return (
       <div className="HotelDetails">
-        <div className="infos">  
-          <Button icon={<ArrowLeftOutlined />} type="link" onClick={this._goBack}></Button>
-          { hotel.photos.length > 0 ?
-            <Carousel>
-              { hotel.photos.map(photo => <div key={photo.id}><img src={`http://localhost:4000/${photo.url}`} /></div>) }
-          </Carousel> : <Empty description={false} /> }
+        <div className="infos">
+          <Button icon={<ArrowLeftOutlined />} type="link" onClick={this.goBack} />
+          { hotel.photos.length > 0
+            ? (
+              <Carousel>
+                { hotel.photos.map(photo => <div key={photo.id}><img alt="Hotel photos" src={`http://localhost:4000/${photo.url}`} /></div>) }
+              </Carousel>
+            ) : <Empty description={false} /> }
           <Title>{hotel.name}</Title>
           <Row justify="space-between">
             <Col>
-              <h3><EnvironmentOutlined /> {hotel.address}</h3>
-              <h3><PhoneOutlined /> {hotel.phone}</h3>
+              <h3>
+                <EnvironmentOutlined />
+                {' '}
+                {hotel.address}
+              </h3>
+              <h3>
+                <PhoneOutlined />
+                {' '}
+                {hotel.phone}
+              </h3>
             </Col>
             <Col>
-              <h3 style={{textAlign: 'right'}}>${hotel.price}<br/>per night (min price)</h3>
+              <h3 style={{ textAlign: 'right' }}>
+                $
+                {hotel.price}
+                <br />
+                per night (min price)
+              </h3>
             </Col>
           </Row>
 
@@ -74,20 +83,31 @@ class HotelDetails extends React.Component {
           </Paragraph>
         </div>
         <div className="favorite">
-          <Button type={hotel.favorite ? "danger" : "primary" } block onClick={this._toggleFavorite}>
-            {hotel.favorite ? "UNFAVORITE" : "MARK AS FAVORITE" }
+          <Button type={hotel.favorite ? 'danger' : 'primary'} block onClick={this.toggleFavorite}>
+            {hotel.favorite ? 'UNFAVORITE' : 'MARK AS FAVORITE' }
           </Button>
         </div>
-      </div> 
+      </div>
     );
   }
+}
 
-} 
+HotelDetails.propTypes = {
+  waitABit: PropTypes.bool.isRequired,
+  hotel: PropTypes.objectOf(PropTypes.object).isRequired,
+
+  details: PropTypes.func.isRequired,
+  favorite: PropTypes.func.isRequired,
+  unfavorite: PropTypes.func.isRequired,
+
+  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  match: PropTypes.objectOf(PropTypes.object).isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
-  details: (id) => dispatch(details(id)),
-  favorite: (id) => dispatch(favorite(id)),
-  unfavorite: (id) => dispatch(unfavorite(id)),
+  details: id => dispatch(details(id)),
+  favorite: id => dispatch(favorite(id)),
+  unfavorite: id => dispatch(unfavorite(id)),
 });
 
 const mapStateToProps = state => ({
