@@ -146,7 +146,7 @@ RMap.defaultProps = {
 
 RMap.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.objectOf(PropTypes.object),
+  hotel: PropTypes.object,
   hotels: PropTypes.instanceOf(Array).isRequired,
 
   location: PropTypes.object.isRequired,

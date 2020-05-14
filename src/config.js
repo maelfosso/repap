@@ -6,7 +6,7 @@ const prod = {
   API_URL: 'https://mv-final-repap-api.herokuapp.com',
 };
 
-const config = process.env.APP_STAGE === 'production'
+const config = process.env.APP_STAGE === 'prod'
   ? prod
   : dev;
 

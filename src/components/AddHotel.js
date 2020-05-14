@@ -125,7 +125,7 @@ class AddHotel extends React.Component {
               required
               rules={[{ required: true, message: 'Please the minimal price for a room!' }]}
             >
-              <InputNumber />
+              <InputNumber min={1} />
             </Form.Item>
             <Form.Item
               name="address"
@@ -141,6 +141,7 @@ class AddHotel extends React.Component {
             <Form.Item
               name="latlng"
               label="Latitude/Longitude"
+              help="Place the marker on the map to fill this field."
               required
               rules={[{ required: true, message: 'Please indicate on the MAP the hotel position' }]}
             >
@@ -198,13 +199,15 @@ class AddHotel extends React.Component {
 
 AddHotel.defaultProps = {
   addedHotel: undefined,
+  addingErrors: undefined,
+  latlngNewHotel: undefined,
 };
 
 AddHotel.propTypes = {
   isAddPending: PropTypes.bool.isRequired,
   isAdded: PropTypes.bool.isRequired,
   isAddedError: PropTypes.bool.isRequired,
-  addingErrors: PropTypes.instanceOf(Array).isRequired,
+  addingErrors: PropTypes.instanceOf(Array),
   addedHotel: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -213,8 +216,8 @@ AddHotel.propTypes = {
     favorite: PropTypes.bool.isRequired,
   }),
   add: PropTypes.func.isRequired,
-  latlngNewHotel: PropTypes.string.isRequired,
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  latlngNewHotel: PropTypes.string,
+  history: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
