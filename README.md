@@ -23,6 +23,7 @@ You can access to the web application [https://mv-final-repap.herokuapp.com/](ht
 
 ## Getting Started
 - git clone `https://github.com/maelfosso/repap.git`
+- yarn install
 - yarn start
 - open your browser at `http://localhost:3000`
 

@@ -93,9 +93,13 @@ class HotelDetails extends React.Component {
   }
 }
 
+HotelDetails.defaultProps = {
+  hotel: undefined,
+};
+
 HotelDetails.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.objectOf(PropTypes.object).isRequired,
+  hotel: PropTypes.object,
 
   details: PropTypes.func.isRequired,
   favorite: PropTypes.func.isRequired,

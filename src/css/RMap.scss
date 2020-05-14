@@ -46,6 +46,11 @@
   .HotelList {
     background-color: white;
     height: calc(100vh - 64px);
+
+    li.ant-list-item {
+      cursor: pointer;
+      padding-right: 1em;
+    }
   }
 
   .HotelDetails {

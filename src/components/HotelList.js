@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  List, Typography, Spin, Row, Col, Rate, Button,
+  List, Typography, Spin, Row, Col, Rate,
 } from 'antd';
-import { HeartTwoTone, RightOutlined } from '@ant-design/icons';
+import { HeartTwoTone } from '@ant-design/icons';
 import {
   withRouter,
 } from 'react-router-dom';
@@ -46,7 +46,7 @@ class HotelList extends React.Component {
   renderItem = item => (
     <List.Item
       key={item.id}
-      actions={[<Button key={item.id} type="link" icon={<RightOutlined />} size="small" onClick={() => this.goToHotel(item.id)} />]}
+      onClick={() => this.goToHotel(item.id)}
     >
       <Col flex="auto">
         <Row>
