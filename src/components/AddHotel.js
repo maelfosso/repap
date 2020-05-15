@@ -117,7 +117,7 @@ class AddHotel extends React.Component {
               required
               rules={[{ required: true, message: 'Please input the phone number!' }]}
             >
-              <Input />
+              <Input maxLength="10" />
             </Form.Item>
             <Form.Item
               name="price"
@@ -208,13 +208,7 @@ AddHotel.propTypes = {
   isAdded: PropTypes.bool.isRequired,
   isAddedError: PropTypes.bool.isRequired,
   addingErrors: PropTypes.instanceOf(Array),
-  addedHotel: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    favorite: PropTypes.bool.isRequired,
-  }),
+  addedHotel: PropTypes.object,
   add: PropTypes.func.isRequired,
   latlngNewHotel: PropTypes.string,
   history: PropTypes.object.isRequired,
