@@ -89,13 +89,13 @@ const RMap = props => {
   const isSidebarOK = () => {
     const { pathname } = location;
 
-    return pathname == '/' ? false : sideUI;
+    return pathname === '/' ? false : sideUI;
   }
 
   const toggleSideBar = () => {
     const { pathname } = location;
 
-    if (pathname == '/') {
+    if (pathname === '/') {
       return;
     }
     setSideUI(!sideUI);
