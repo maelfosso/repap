@@ -3,11 +3,26 @@
   padding-top: 64px;
   position: relative;
 
-  > .ant-col {
-    position: absolute;
-    background-color: transparent;
-    z-index: 2500;
-    width: 100%;
+  .side-ui {
+    position: relative;
+    > .ant-col {
+      position: absolute;
+      background-color: transparent;
+      z-index: 2500;
+      width: 100%;
+    }
+
+    .content {
+      width: 100%;
+
+      &.open {
+        display: block;
+      }
+
+      &.closed {
+        display: none;
+      }
+    }
   }
 
   .adding-process {
@@ -95,4 +110,10 @@
 
   }
 
+  .search {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: self-start;
+    justify-content: flex-end;
+  }
 }
