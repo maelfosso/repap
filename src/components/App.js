@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import { Spin } from 'antd';
 import 'antd/dist/antd.css';
 import {
-  BrowserRouter as Router,
+  BrowserRouter as Router, Switch
 } from 'react-router-dom';
 import Header from '../containers/Header';
 import { checkToken } from '../actions/auth';
 import '../css/App.scss';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
+import Auth from './Auth';
 import RMap from '../containers/RMap';
 
 class App extends React.Component {
@@ -33,10 +36,10 @@ class App extends React.Component {
       <Router>
         <div>
           <Header key="header" />
-
-          { isAuthenticated
-            ? <RMap />
-            : null}
+          <Switch>
+            <PublicRoute component={Auth} authenticated={isAuthenticated} path="/auth" />
+            <PrivateRoute component={RMap} authenticated={isAuthenticated} path="/" />
+          </Switch>
         </div>
       </Router>
     );
