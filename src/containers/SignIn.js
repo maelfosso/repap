@@ -116,8 +116,6 @@ SignIn.propTypes = {
   isLoginPending: PropTypes.bool.isRequired,
 
   history: PropTypes.object.isRequired,
-
-  registration: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -37,7 +37,7 @@ const Header = (props) => {
       return <span />;
     }
 
-    return <Dropdown overlay={menu}><span>{user.name}</span></Dropdown>;
+    return <Dropdown className="username" overlay={menu}><span>{user.name}</span></Dropdown>;
   }
   
   return (
