@@ -99,14 +99,14 @@ HotelDetails.defaultProps = {
 
 HotelDetails.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.object,
+  hotel: PropTypes.objectOf(PropTypes.any),
 
   details: PropTypes.func.isRequired,
   favorite: PropTypes.func.isRequired,
   unfavorite: PropTypes.func.isRequired,
 
-  match: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  match: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

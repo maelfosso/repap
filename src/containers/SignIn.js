@@ -22,6 +22,25 @@ const key = 'auth/sign-in';
 const SignIn = props => {
   const loginForm = React.createRef();
 
+  const onLoginPending = () => {
+    message.loading('Login in progress', 1, key);
+  };
+
+  const onLoginSuccess = () => {
+    message.success({ content: 'Login successful!', key });
+  };
+
+  const onLoginFailed = () => {
+    message.error({ content: 'Sorry login failed!', key });
+  };
+
+  const onSignInFinish = values => {
+    const { login } = props;
+    const { username, password } = values;
+
+    login(username, password);
+  };
+
   const mounted = useRef();
   useEffect(() => {
     if (!mounted.current) {
@@ -42,25 +61,6 @@ const SignIn = props => {
       }
     }
   });
-
-  const onLoginPending = () => {
-    message.loading('Login in progress', 1, key);
-  };
-
-  const onLoginSuccess = () => {
-    message.success({ content: 'Login successful!', key });
-  };
-
-  const onLoginFailed = () => {
-    message.error({ content: 'Sorry login failed!', key });
-  };
-
-  const onSignInFinish = values => {
-    const { login } = props;
-    const { username, password } = values;
-
-    login(username, password);
-  };
 
   return (
     <div>
@@ -115,7 +115,7 @@ SignIn.propTypes = {
   isLoginSuccess: PropTypes.bool.isRequired,
   isLoginPending: PropTypes.bool.isRequired,
 
-  history: PropTypes.object.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

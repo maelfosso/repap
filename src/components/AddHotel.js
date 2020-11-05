@@ -15,6 +15,7 @@ import HotelsAPI from '../api/Hotels';
 
 const { Step } = Steps;
 
+/* eslint-disable react/jsx-props-no-spreading */
 class AddHotel extends React.Component {
   constructor(props) {
     super(props);
@@ -208,10 +209,10 @@ AddHotel.propTypes = {
   isAdded: PropTypes.bool.isRequired,
   isAddedError: PropTypes.bool.isRequired,
   addingErrors: PropTypes.instanceOf(Array),
-  addedHotel: PropTypes.object,
+  addedHotel: PropTypes.objectOf(PropTypes.any),
   add: PropTypes.func.isRequired,
   latlngNewHotel: PropTypes.string,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -92,7 +92,7 @@ const Header = props => {
 Header.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
 
-  history: PropTypes.object.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 
   logout: PropTypes.func.isRequired,
 };

@@ -37,6 +37,7 @@ const formItemLayout = {
     },
   },
 };
+const { labelCol, wrapperCol } = formItemLayout;
 
 const SignUp = props => {
   const {
@@ -44,6 +45,22 @@ const SignUp = props => {
   } = props;
 
   const registrationForm = React.createRef();
+
+  const onRegistrationPending = () => {
+    message.loading({ content: 'Registration in progress', key });
+  };
+
+  const onRegistrationSuccess = () => {
+    message.success({ content: 'Registration successful!', key });
+    registrationForm.current.resetFields();
+  };
+
+  const onRegistrationFailed = errors => {
+    message.error({
+      content: `Sorry registration failed!\n${errors}`,
+      key,
+    });
+  };
 
   const mounted = useRef();
   useEffect(() => {
@@ -62,25 +79,6 @@ const SignUp = props => {
     }
   });
 
-  const onRegistrationPending = () => {
-    message.loading({ content: 'Registration in progress', key });
-  };
-
-  const onRegistrationSuccess = () => {
-    message.success({ content: 'Registration successful!', key });
-    this.setState({
-      signUpModalVisible: false,
-    });
-    this.registrationForm.current.resetFields();
-  };
-
-  const onRegistrationFailed = errors => {
-    message.error({
-      content: `Sorry registration failed!\n${errors}`,
-      key,
-    });
-  };
-
   const onSignUpFinish = values => {
     const { registration } = props;
     const {
@@ -95,7 +93,8 @@ const SignUp = props => {
       <Title>Sign Up</Title>
 
       <Form
-        {...formItemLayout}
+        labelCol={labelCol}
+        wrapperCol={wrapperCol}
         name="sign_up"
         className="sign-up-form"
         onFinish={onSignUpFinish}
@@ -219,8 +218,6 @@ SignUp.propTypes = {
   isRegistrationSuccess: PropTypes.bool.isRequired,
   isRegistrationPending: PropTypes.bool.isRequired,
   registrationErrors: PropTypes.instanceOf(Array).isRequired,
-
-  history: PropTypes.object.isRequired,
 
   registration: PropTypes.func.isRequired,
 };

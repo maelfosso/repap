@@ -101,8 +101,8 @@ HotelList.propTypes = {
   favorites: PropTypes.func.isRequired,
   waitABitFunc: PropTypes.func.isRequired,
 
-  location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  location: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

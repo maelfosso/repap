@@ -5,7 +5,7 @@ import {
 import SignIn from '../containers/SignIn';
 import SignUp from '../containers/SignUp';
 
-const Auth = ({ component: Component, authenticated, ...rest }) => {
+const Auth = () => {
   const match = useRouteMatch();
 
   return (

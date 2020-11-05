@@ -158,11 +158,11 @@ RMap.defaultProps = {
 
 RMap.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.object,
+  hotel: PropTypes.objectOf(PropTypes.any),
   hotels: PropTypes.instanceOf(Array).isRequired,
 
-  location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  location: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapStateToProps = state => ({
