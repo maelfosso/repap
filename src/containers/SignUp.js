@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import {
   message, Tooltip, Alert, Button,
-  Form, Input, Checkbox,
+  Form, Input,
   Typography
 } from 'antd';
 import {
@@ -203,13 +203,6 @@ const SignUp = (props) => {
             && registrationErrors
             && registrationErrors.map(error => <Alert key={error.length} message={error} type="error" />) }
         </div>
-
-        <Form.Item name="agreement" valuePropName="checked">
-          <Checkbox>
-            I have read the
-            <Button type="link">agreement</Button>
-          </Checkbox>
-        </Form.Item>
 
         <Form.Item>
           <Button type="primary" htmlType="submit" className="button">
