@@ -16,16 +16,15 @@ import HotelsAPI from '../api/Hotels';
 
 const { Step } = Steps;
 
-const getBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
+const getBase64 = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = error => reject(error);
+});
 
 /* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-param-reassign */
 class AddHotel extends React.Component {
   constructor(props) {
     super(props);
@@ -76,7 +75,7 @@ class AddHotel extends React.Component {
       message.error(`${info.file.name} file upload failed.`);
     }
   }
-  
+
   handlePreview = async file => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -94,8 +93,8 @@ class AddHotel extends React.Component {
   render = () => {
     const {
       isAddPending, isAdded, addedHotel,
-      isAddedError, addingErrors, 
-      init
+      isAddedError, addingErrors,
+      init,
     } = this.props;
     const { uploadedFileList } = this.state;
 
@@ -112,11 +111,11 @@ class AddHotel extends React.Component {
         Authorization: `Bearer ${localStorage.token}`,
       },
       onChange: this.onUploadChange,
-      onPreview: this.handlePreview
+      onPreview: this.handlePreview,
     };
 
     const { previewVisible, previewImage, previewTitle } = this.state;
-    
+
     return (
       <div className="adding-process">
         <Steps current={current}>
@@ -124,7 +123,7 @@ class AddHotel extends React.Component {
           <Step title="Photos" />
         </Steps>
 
-        <div hidden={current != 0}>
+        <div hidden={current !== 0}>
           <Form
             labelAlign="left"
             layout="vertical"
@@ -199,7 +198,7 @@ class AddHotel extends React.Component {
           </Form>
         </div>
 
-        <div hidden={current != 1} className="photos">
+        <div hidden={current !== 1} className="photos">
           <div>
             <Upload.Dragger {...uploadProps}>
               <p className="ant-upload-drag-icon">
@@ -222,13 +221,12 @@ class AddHotel extends React.Component {
           </div>
         </div>
 
-
         <Modal
           visible={previewVisible}
           title={previewTitle}
           footer={null}
           onCancel={this.handleCancel}
-          wrapClassName='modal'
+          wrapClassName="modal"
         >
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
         </Modal>
@@ -250,6 +248,7 @@ AddHotel.propTypes = {
   addingErrors: PropTypes.instanceOf(Array),
   addedHotel: PropTypes.objectOf(PropTypes.any),
   add: PropTypes.func.isRequired,
+  init: PropTypes.bool.isRequired,
   latlngNewHotel: PropTypes.string,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
 };

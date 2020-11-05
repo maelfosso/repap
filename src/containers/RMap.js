@@ -122,7 +122,7 @@ const RMap = props => {
                   <HotelDetails />
                 </Route>
                 <Route exact path="/add">
-                  <AddHotel init={true} latlngNewHotel={latlngNewHotel} />
+                  <AddHotel init latlngNewHotel={latlngNewHotel} />
                 </Route>
               </Switch>
             </div>
