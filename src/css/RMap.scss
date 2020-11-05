@@ -3,8 +3,26 @@
   padding-top: 64px;
   position: relative;
 
+  form {
+    background-color: white;
+
+    &.ant-form {
+      padding: 1em;
+
+      .ant-row {
+        margin-bottom: 0;
+      }
+    }
+
+    .ant-col {
+      position: relative !important;
+      padding-bottom: 0;
+    }
+  }
+
   .side-ui {
     position: relative;
+
     > .ant-col {
       position: absolute;
       background-color: transparent;
@@ -26,35 +44,16 @@
   }
 
   .adding-process {
-
     background-color: white;
     height: calc(100vh - 64px);
     padding: 14px;
 
     .photos {
       margin-top: 14px;
-    
+
       .btn {
         margin-top: 14px;
       }
-    }
-
-  }
-  
-  form {
-    background-color: white;
-
-    &.ant-form {
-      padding: 1em;
-
-      .ant-row {
-        margin-bottom: 0px;
-      }
-    }
-
-    .ant-col {
-      position: relative!important;
-      padding-bottom: 0px;
     }
   }
 
@@ -70,14 +69,12 @@
 
   .HotelDetails {
     position: relative;
-    height: 100%;
-
     background-color: white;
     height: calc(100vh - 64px);
 
     .infos {
       padding: 0 2em;
-      
+
       .ant-empty {
         width: 100%;
         height: 50vh;
@@ -101,13 +98,12 @@
       bottom: 0;
       width: 100%;
 
-      Button {
+      button {
         height: 2em;
         font-size: x-large;
         border-radius: 0;
       }
     }
-
   }
 
   .search {

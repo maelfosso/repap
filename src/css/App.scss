@@ -35,6 +35,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -44,7 +45,6 @@
   width: 100%;
   height: calc(100vh - 64px);
 }
-
 
 .HotelList {
   background-color: white;
@@ -70,7 +70,7 @@ header {
     list-style: none;
     display: flex;
     flex-direction: row;
-    
+
     li {
       display: block;
       padding: 0 1rem;
