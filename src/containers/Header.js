@@ -8,13 +8,12 @@ import PropTypes from 'prop-types';
 
 import {
   Button, Menu, Dropdown,
-  Row, Col, Space
+  Row, Col, Space,
 } from 'antd';
 
 import { logout } from '../actions/auth';
 
-const Header = (props) => {
-
+const Header = props => {
   const { isAuthenticated } = props;
 
   const signOut = () => {
@@ -38,8 +37,8 @@ const Header = (props) => {
     }
 
     return <Dropdown className="username" overlay={menu}><span>{user.name}</span></Dropdown>;
-  }
-  
+  };
+
   return (
     <header>
       <Row>
@@ -88,18 +87,18 @@ const Header = (props) => {
 
     </header>
   );
-}
+};
 
 Header.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
 
   history: PropTypes.object.isRequired,
-  
+
   logout: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logout())
+  logout: () => dispatch(logout()),
 });
 
 const mapStateToProps = state => ({

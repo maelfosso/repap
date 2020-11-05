@@ -1,10 +1,12 @@
 import React from 'react';
-import { Route, Switch, Redirect, useRouteMatch } from 'react-router-dom';
+import {
+  Route, Switch, Redirect, useRouteMatch,
+} from 'react-router-dom';
 import SignIn from '../containers/SignIn';
 import SignUp from '../containers/SignUp';
 
 const Auth = ({ component: Component, authenticated, ...rest }) => {
-  let match = useRouteMatch();
+  const match = useRouteMatch();
 
   return (
     <div className="Auth">
@@ -18,7 +20,7 @@ const Auth = ({ component: Component, authenticated, ...rest }) => {
         <Redirect exact from={`${match.path}`} to={`${match.path}/sign-in`} />
       </Switch>
     </div>
-  )
-}
+  );
+};
 
 export default Auth;

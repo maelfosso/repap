@@ -7,10 +7,10 @@ import {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Typography, Col, Button
+  Typography, Col, Button,
 } from 'antd';
 import {
-  MenuFoldOutlined, MenuUnfoldOutlined
+  MenuFoldOutlined, MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import {
   Map, Marker, Popup, TileLayer, ZoomControl,
@@ -26,9 +26,9 @@ const { Text } = Typography;
 const center = [3.844119, 11.501346];
 
 const RMap = props => {
-  const { 
+  const {
     history, location,
-    waitABit, hotel, hotels
+    waitABit, hotel, hotels,
   } = props;
 
   const [latlngNewHotel, setLatLng] = useState();
@@ -37,7 +37,7 @@ const RMap = props => {
   const onHotelCreationClick = () => {
     setSideUI(true);
     history.push('/add');
-  }
+  };
 
   /* eslint-disable consistent-return */
   const renderMarkers = () => {
@@ -73,7 +73,7 @@ const RMap = props => {
         <Popup><Text strong>{hotel.name}</Text></Popup>
       </Marker>
     ));
-  }
+  };
 
   const onMapClick = values => {
     const { latlng } = values;
@@ -84,13 +84,13 @@ const RMap = props => {
 
       setLatLng(`${lat}, ${lng}`);
     }
-  }
+  };
 
   const isSidebarOK = () => {
     const { pathname } = location;
 
     return pathname === '/' ? false : sideUI;
-  }
+  };
 
   const toggleSideBar = () => {
     const { pathname } = location;
@@ -99,7 +99,7 @@ const RMap = props => {
       return;
     }
     setSideUI(!sideUI);
-  }
+  };
 
   return (
     <div>
@@ -107,10 +107,10 @@ const RMap = props => {
         <div className="side-ui">
           <Col xs={24} md={12} className="search">
             <Button
-              onClick={() => toggleSideBar()} 
-              icon={ isSidebarOK() ? <MenuFoldOutlined /> : <MenuUnfoldOutlined /> }>
-            </Button>
-            <div className={`content ${sideUI ? "open" : "closed"}`}>
+              onClick={() => toggleSideBar()}
+              icon={isSidebarOK() ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+            />
+            <div className={`content ${sideUI ? 'open' : 'closed'}`}>
               <Switch>
                 <Route exact path="/favorites">
                   <HotelList />
@@ -150,7 +150,7 @@ const RMap = props => {
       </div>
     </div>
   );
-}
+};
 
 RMap.defaultProps = {
   hotel: undefined,

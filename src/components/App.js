@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Spin } from 'antd';
 import 'antd/dist/antd.css';
 import {
-  BrowserRouter as Router, Switch
+  BrowserRouter as Router, Switch,
 } from 'react-router-dom';
 import Header from '../containers/Header';
 import { checkToken } from '../actions/auth';
@@ -45,7 +45,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 App.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,

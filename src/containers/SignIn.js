@@ -8,10 +8,10 @@ import PropTypes from 'prop-types';
 import {
   message, Button,
   Form, Input, Checkbox,
-  Typography
+  Typography,
 } from 'antd';
 import {
-  UserOutlined, LockOutlined
+  UserOutlined, LockOutlined,
 } from '@ant-design/icons';
 
 import { login } from '../actions/auth';
@@ -19,7 +19,7 @@ import { login } from '../actions/auth';
 const { Title } = Typography;
 const key = 'auth/sign-in';
 
-const SignIn = (props) => {
+const SignIn = props => {
   const loginForm = React.createRef();
 
   const mounted = useRef();
@@ -28,7 +28,7 @@ const SignIn = (props) => {
       mounted.current = true;
     } else {
       const {
-        isLoginPending, isLoginFailed, isLoginSuccess
+        isLoginPending, isLoginFailed, isLoginSuccess,
       } = props;
 
       if (isLoginPending) {
@@ -45,22 +45,22 @@ const SignIn = (props) => {
 
   const onLoginPending = () => {
     message.loading('Login in progress', 1, key);
-  }
+  };
 
   const onLoginSuccess = () => {
     message.success({ content: 'Login successful!', key });
-  }
+  };
 
   const onLoginFailed = () => {
     message.error({ content: 'Sorry login failed!', key });
-  }
+  };
 
-  const onSignInFinish = (values) => {
+  const onSignInFinish = values => {
     const { login } = props;
     const { username, password } = values;
 
     login(username, password);
-  }
+  };
 
   return (
     <div>
@@ -107,8 +107,8 @@ const SignIn = (props) => {
         </Form.Item>
       </Form>
     </div>
-  )
-}
+  );
+};
 
 SignIn.propTypes = {
   isLoginFailed: PropTypes.bool.isRequired,
@@ -119,7 +119,7 @@ SignIn.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  login: (username, password) => dispatch(login(username, password))
+  login: (username, password) => dispatch(login(username, password)),
 });
 
 const mapStateToProps = state => ({
@@ -131,4 +131,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SignIn));
-

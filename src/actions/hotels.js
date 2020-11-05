@@ -5,7 +5,6 @@ import {
 } from '../actionTypes';
 import HotelsAPI from '../api/Hotels';
 
-
 export const addPending = () => ({
   type: HOTEL_ADD_PENDING,
 });

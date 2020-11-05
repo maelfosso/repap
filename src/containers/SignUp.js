@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
   message, Tooltip, Alert, Button,
   Form, Input,
-  Typography
+  Typography,
 } from 'antd';
 import {
   QuestionCircleOutlined,
@@ -38,7 +38,7 @@ const formItemLayout = {
   },
 };
 
-const SignUp = (props) => {
+const SignUp = props => {
   const {
     isRegistrationPending, isRegistrationFailed, isRegistrationSuccess, registrationErrors,
   } = props;
@@ -50,7 +50,6 @@ const SignUp = (props) => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
-      
       if (isRegistrationPending) {
         onRegistrationPending();
       }
@@ -65,7 +64,7 @@ const SignUp = (props) => {
 
   const onRegistrationPending = () => {
     message.loading({ content: 'Registration in progress', key });
-  }
+  };
 
   const onRegistrationSuccess = () => {
     message.success({ content: 'Registration successful!', key });
@@ -73,15 +72,15 @@ const SignUp = (props) => {
       signUpModalVisible: false,
     });
     this.registrationForm.current.resetFields();
-  }
+  };
 
   const onRegistrationFailed = errors => {
     message.error({
       content: `Sorry registration failed!\n${errors}`,
       key,
     });
-  }
-  
+  };
+
   const onSignUpFinish = values => {
     const { registration } = props;
     const {
@@ -89,13 +88,12 @@ const SignUp = (props) => {
     } = values;
 
     registration(name, email, phone, password, passwordConfirmation);
-  }
-
+  };
 
   return (
     <div>
       <Title>Sign Up</Title>
-      
+
       <Form
         {...formItemLayout}
         name="sign_up"
@@ -213,8 +211,8 @@ const SignUp = (props) => {
         </Form.Item>
       </Form>
     </div>
-  )
-}
+  );
+};
 
 SignUp.propTypes = {
   isRegistrationFailed: PropTypes.bool.isRequired,
@@ -230,7 +228,7 @@ SignUp.propTypes = {
 const mapDispatchToProps = dispatch => ({
   registration: (name, email, phone,
     password, passwordConfirmation) => dispatch(registration(name, email, phone,
-    password, passwordConfirmation))
+    password, passwordConfirmation)),
 });
 
 const mapStateToProps = state => ({
@@ -241,4 +239,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SignUp));
-

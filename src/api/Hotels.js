@@ -1,7 +1,6 @@
 import config from '../config';
 import { handleTokenErrors } from './Helpers';
 
-
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
