@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import {
   Input,
   Form, InputNumber, Button, Alert,
+  Modal,
   Upload, Steps, message,
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -15,6 +16,15 @@ import HotelsAPI from '../api/Hotels';
 
 const { Step } = Steps;
 
+const getBase64 = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = error => reject(error);
+});
+
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-param-reassign */
 class AddHotel extends React.Component {
   constructor(props) {
     super(props);
@@ -66,14 +76,29 @@ class AddHotel extends React.Component {
     }
   }
 
+  handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+      previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+    });
+  };
+
+  handleCancel = () => this.setState({ previewVisible: false });
+
   render = () => {
     const {
       isAddPending, isAdded, addedHotel,
       isAddedError, addingErrors,
+      init,
     } = this.props;
     const { uploadedFileList } = this.state;
 
-    const current = !isAdded ? 0 : 1;
+    const current = !isAdded || init ? 0 : 1;
     const joinPhotoUrl = isAdded ? HotelsAPI.photoJoin(addedHotel.id) : '';
 
     const uploadProps = {
@@ -86,7 +111,10 @@ class AddHotel extends React.Component {
         Authorization: `Bearer ${localStorage.token}`,
       },
       onChange: this.onUploadChange,
+      onPreview: this.handlePreview,
     };
+
+    const { previewVisible, previewImage, previewTitle } = this.state;
 
     return (
       <div className="adding-process">
@@ -95,7 +123,7 @@ class AddHotel extends React.Component {
           <Step title="Photos" />
         </Steps>
 
-        <div hidden={isAdded}>
+        <div hidden={current !== 0}>
           <Form
             labelAlign="left"
             layout="vertical"
@@ -117,7 +145,7 @@ class AddHotel extends React.Component {
               required
               rules={[{ required: true, message: 'Please input the phone number!' }]}
             >
-              <Input />
+              <Input maxLength="10" />
             </Form.Item>
             <Form.Item
               name="price"
@@ -125,7 +153,7 @@ class AddHotel extends React.Component {
               required
               rules={[{ required: true, message: 'Please the minimal price for a room!' }]}
             >
-              <InputNumber />
+              <InputNumber min={1} />
             </Form.Item>
             <Form.Item
               name="address"
@@ -141,6 +169,7 @@ class AddHotel extends React.Component {
             <Form.Item
               name="latlng"
               label="Latitude/Longitude"
+              help="Place the marker on the map to fill this field."
               required
               rules={[{ required: true, message: 'Please indicate on the MAP the hotel position' }]}
             >
@@ -169,7 +198,7 @@ class AddHotel extends React.Component {
           </Form>
         </div>
 
-        <div hidden={!isAdded} className="photos">
+        <div hidden={current !== 1} className="photos">
           <div>
             <Upload.Dragger {...uploadProps}>
               <p className="ant-upload-drag-icon">
@@ -191,6 +220,16 @@ class AddHotel extends React.Component {
             </Button>
           </div>
         </div>
+
+        <Modal
+          visible={previewVisible}
+          title={previewTitle}
+          footer={null}
+          onCancel={this.handleCancel}
+          wrapClassName="modal"
+        >
+          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        </Modal>
       </div>
     );
   }
@@ -198,23 +237,20 @@ class AddHotel extends React.Component {
 
 AddHotel.defaultProps = {
   addedHotel: undefined,
+  addingErrors: undefined,
+  latlngNewHotel: undefined,
 };
 
 AddHotel.propTypes = {
   isAddPending: PropTypes.bool.isRequired,
   isAdded: PropTypes.bool.isRequired,
   isAddedError: PropTypes.bool.isRequired,
-  addingErrors: PropTypes.instanceOf(Array).isRequired,
-  addedHotel: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    favorite: PropTypes.bool.isRequired,
-  }),
+  addingErrors: PropTypes.instanceOf(Array),
+  addedHotel: PropTypes.objectOf(PropTypes.any),
   add: PropTypes.func.isRequired,
-  latlngNewHotel: PropTypes.string.isRequired,
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  init: PropTypes.bool.isRequired,
+  latlngNewHotel: PropTypes.string,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -1,7 +1,6 @@
 import config from '../config';
 import { handleTokenErrors } from './Helpers';
 
-
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
@@ -11,7 +10,7 @@ class HotelsAPI {
   static photoJoin(id) {
     return `${config.API_URL}/hotels/${id}/photos`;
   }
-  
+
   static photoUrl(url) {
     return `${config.API_URL}/${url}`;
   }

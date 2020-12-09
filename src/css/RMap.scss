@@ -3,29 +3,6 @@
   padding-top: 64px;
   position: relative;
 
-  > .ant-col {
-    position: absolute;
-    background-color: transparent;
-    z-index: 2500;
-    width: 100%;
-  }
-
-  .adding-process {
-
-    background-color: white;
-    height: calc(100vh - 64px);
-    padding: 14px;
-
-    .photos {
-      margin-top: 14px;
-    
-      .btn {
-        margin-top: 14px;
-      }
-    }
-
-  }
-  
   form {
     background-color: white;
 
@@ -33,31 +10,71 @@
       padding: 1em;
 
       .ant-row {
-        margin-bottom: 0px;
+        margin-bottom: 0;
       }
     }
 
     .ant-col {
-      position: relative!important;
-      padding-bottom: 0px;
+      position: relative !important;
+      padding-bottom: 0;
+    }
+  }
+
+  .side-ui {
+    position: relative;
+
+    > .ant-col {
+      position: absolute;
+      background-color: transparent;
+      z-index: 2500;
+      width: 100%;
+    }
+
+    .content {
+      width: 100%;
+
+      &.open {
+        display: block;
+      }
+
+      &.closed {
+        display: none;
+      }
+    }
+  }
+
+  .adding-process {
+    background-color: white;
+    height: calc(100vh - 64px);
+    padding: 14px;
+
+    .photos {
+      margin-top: 14px;
+
+      .btn {
+        margin-top: 14px;
+      }
     }
   }
 
   .HotelList {
     background-color: white;
     height: calc(100vh - 64px);
+
+    li.ant-list-item {
+      cursor: pointer;
+      padding-right: 1em;
+    }
   }
 
   .HotelDetails {
     position: relative;
-    height: 100%;
-
     background-color: white;
     height: calc(100vh - 64px);
 
     .infos {
       padding: 0 2em;
-      
+
       .ant-empty {
         width: 100%;
         height: 50vh;
@@ -81,13 +98,22 @@
       bottom: 0;
       width: 100%;
 
-      Button {
+      button {
         height: 2em;
         font-size: x-large;
         border-radius: 0;
       }
     }
-
   }
 
+  .search {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: self-start;
+    justify-content: flex-end;
+  }
+}
+
+.modal {
+  z-index: 4000;
 }

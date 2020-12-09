@@ -93,16 +93,20 @@ class HotelDetails extends React.Component {
   }
 }
 
+HotelDetails.defaultProps = {
+  hotel: undefined,
+};
+
 HotelDetails.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.objectOf(PropTypes.object).isRequired,
+  hotel: PropTypes.objectOf(PropTypes.any),
 
   details: PropTypes.func.isRequired,
   favorite: PropTypes.func.isRequired,
   unfavorite: PropTypes.func.isRequired,
 
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
-  match: PropTypes.objectOf(PropTypes.object).isRequired,
+  match: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

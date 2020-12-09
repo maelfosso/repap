@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Switch,
   Route,
@@ -7,8 +7,11 @@ import {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Typography, Col,
+  Typography, Col, Button,
 } from 'antd';
+import {
+  MenuFoldOutlined, MenuUnfoldOutlined,
+} from '@ant-design/icons';
 import {
   Map, Marker, Popup, TileLayer, ZoomControl,
 } from 'react-leaflet';
@@ -18,32 +21,27 @@ import HotelList from '../components/HotelList';
 import HotelDetails from '../components/HotelDetails';
 import AddHotel from '../components/AddHotel';
 
-import '../css/RMap.scss';
-
 const { Text } = Typography;
 
 const center = [3.844119, 11.501346];
 
-class RMap extends React.Component {
-  constructor(props) {
-    super(props);
+const RMap = props => {
+  const {
+    history, location,
+    waitABit, hotel, hotels,
+  } = props;
 
-    this.state = {
-      latlngNewHotel: null,
-    };
-  }
+  const [latlngNewHotel, setLatLng] = useState();
+  const [sideUI, setSideUI] = useState(false);
 
-  onHotelCreationClick = () => {
-    const { history } = this.props;
+  const onHotelCreationClick = () => {
+    setSideUI(true);
     history.push('/add');
-  }
+  };
 
   /* eslint-disable consistent-return */
-  renderMarkers = () => {
-    const { location } = this.props;
+  const renderMarkers = () => {
     const { pathname } = location;
-    const { waitABit, hotel, hotels } = this.props;
-    const { latlngNewHotel } = this.state;
 
     if (waitABit) {
       return;
@@ -75,78 +73,96 @@ class RMap extends React.Component {
         <Popup><Text strong>{hotel.name}</Text></Popup>
       </Marker>
     ));
-  }
+  };
 
-  onMapClick = values => {
+  const onMapClick = values => {
     const { latlng } = values;
-    const { location } = this.props;
     const { pathname } = location;
 
     if (pathname === '/add') {
       const { lat, lng } = latlng;
 
-
-      this.setState({
-        latlngNewHotel: `${lat}, ${lng}`,
-      });
+      setLatLng(`${lat}, ${lng}`);
     }
-  }
+  };
 
-  render() {
-    const { latlngNewHotel } = this.state;
+  const isSidebarOK = () => {
+    const { pathname } = location;
 
-    return (
-      <div>
-        <div className="RMap">
+    return pathname === '/' ? false : sideUI;
+  };
+
+  const toggleSideBar = () => {
+    const { pathname } = location;
+
+    if (pathname === '/') {
+      return;
+    }
+    setSideUI(!sideUI);
+  };
+
+  return (
+    <div>
+      <div className="RMap">
+        <div className="side-ui">
           <Col xs={24} md={12} className="search">
-            <Switch>
-              <Route exact path="/favorites">
-                <HotelList />
-              </Route>
-              <Route exact path="/hotels">
-                <HotelList />
-              </Route>
-              <Route exact path="/hotels/:hotelId">
-                <HotelDetails />
-              </Route>
-              <Route exact path="/add">
-                <AddHotel latlngNewHotel={latlngNewHotel} />
-              </Route>
-            </Switch>
-          </Col>
-          <Map
-            center={center}
-            zoom={12}
-            whenReady={this.onMapReady}
-            onClick={this.onMapClick}
-          >
-            <ZoomControl position="topright" />
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            <Button
+              onClick={() => toggleSideBar()}
+              icon={isSidebarOK() ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
             />
-
-            { this.renderMarkers() }
-          </Map>
-          <Fab
-            icon={<span>+</span>}
-            mainButtonStyles={{ backgroundColor: '#e74c3c' }}
-            onClick={this.onHotelCreationClick}
-            event={null}
-          />
+            <div className={`content ${sideUI ? 'open' : 'closed'}`}>
+              <Switch>
+                <Route exact path="/favorites">
+                  <HotelList />
+                </Route>
+                <Route exact path="/hotels">
+                  <HotelList />
+                </Route>
+                <Route exact path="/hotels/:hotelId">
+                  <HotelDetails />
+                </Route>
+                <Route exact path="/add">
+                  <AddHotel init latlngNewHotel={latlngNewHotel} />
+                </Route>
+              </Switch>
+            </div>
+          </Col>
         </div>
+        <Map
+          center={center}
+          zoom={12}
+          onClick={onMapClick}
+        >
+          <ZoomControl position="topright" />
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
+
+          { renderMarkers() }
+        </Map>
+        <Fab
+          icon={<span>+</span>}
+          mainButtonStyles={{ backgroundColor: '#e74c3c' }}
+          onClick={() => onHotelCreationClick()}
+          event={null}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+RMap.defaultProps = {
+  hotel: undefined,
+};
 
 RMap.propTypes = {
   waitABit: PropTypes.bool.isRequired,
-  hotel: PropTypes.objectOf(PropTypes.object).isRequired,
+  hotel: PropTypes.objectOf(PropTypes.any),
   hotels: PropTypes.instanceOf(Array).isRequired,
 
-  location: PropTypes.objectOf(PropTypes.object).isRequired,
-  history: PropTypes.objectOf(PropTypes.object).isRequired,
+  location: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapStateToProps = state => ({
